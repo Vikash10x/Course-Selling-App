@@ -46,12 +46,12 @@ adminRouter.get("/course", async (req, res) => {
 });
 
 adminRouter.delete("/delete/:id", authMiddleware, async function (req, res) {
-    if (req.user.role !== "admin") {
-        return res.status(403).json({
-            success: false,
-            message: "Only admins can delete courses"
-        });
-    }
+    // if (req.user.role !== "admin") {
+    //     return res.status(403).json({
+    //         success: false,
+    //         message: "Only admins can delete courses"
+    //     });
+    // }
 
     try {
         const courseId = req.params.id;
