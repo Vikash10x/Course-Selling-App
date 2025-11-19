@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AddCourse from "./AddCourse";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -16,28 +17,30 @@ const Navbar = () => {
     return (
 
         <>
-            <nav className="bg-gray-900 text-white p-10 flex justify-between items-center">
+            <nav className="bg-gray-900 text-white p-5 flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Course App</h1>
 
                 <div className="space-x-6">
-                    <Link to="/" className="hover:text-blue-700"></Link>
-                    <Link to="/course" className="hover:text-blue-700"><button>Courses</button></Link>
-                    <Link to="/purchase" className="hover:text-red-700"><button>My-Courses</button></Link>
+                    <Link to="/"></Link>
 
                     {!token && (
                         <>
-                            <Link to="/signup" className="hover:text-green-700"><button>Signup</button></Link>
-                            <Link to="/signin" className="hover:text-yellow-700"><button>Signin</button></Link>
+                            <Link to="/signup"><button>Signup</button></Link>
+                            <Link to="/signin"><button>Signin</button></Link>
                         </>
                     )}
 
                     {token && (
-                        <button
-                            onClick={handleLogout}
-                            className="bg-red-600 px-4 py-1 rounded-lg hover:bg-red-700"
-                        >
-                            Logout
-                        </button>
+                        <div className="border border-white">
+                            <AddCourse />
+                            <Link to="/course"><button>Courses</button></Link>
+                            <Link to="/purchase" className="ml-5"><button>My Courses</button></Link>
+                            <button className="ml-5"
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </button>
+                        </div>
                     )}
                 </div>
             </nav>

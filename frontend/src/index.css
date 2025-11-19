@@ -12,6 +12,7 @@ button {
 
 button:hover {
   border-color: #646cff;
+  color: rgb(193, 193, 171);
 }
 
 button:focus,

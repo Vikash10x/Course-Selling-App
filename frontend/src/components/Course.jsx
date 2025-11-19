@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const Course = () => {
     const [courses, setCourses] = useState([]);
-    const [open, setOpen] = useState(false);
-
-    const [newCourse, setNewCourse] = useState({
-        title: "",
-        description: "",
-        price: "",
-    });
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,34 +25,6 @@ const Course = () => {
         fetchData();
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:3000/api/v1/admin/course", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(newCourse),
-            });
-
-            const data = await res.json();
-            alert(data.message || "Course added successfully!");
-
-            if (data.course) {
-                setCourses([...courses, data.course]);
-            }
-            console.log("Data: ", data);
-
-            setNewCourse({ title: "", description: "", price: "" });
-            setOpen(false);
-        } catch (err) {
-            console.log("Error:", err);
-            alert("Something went wrong!");
-        }
-    };
 
     const handleBuy = async (id) => {
         const token = localStorage.getItem("token");
@@ -74,14 +40,31 @@ const Course = () => {
         const data = await res.json();
         alert(data.message);
         // console.log(data.message);
-
     }
 
-    const handleOverlayClick = (e) => {
-        if (e.target.id === "overlay") {
-            setOpen(false);
-        }
+
+    const handleDelete = async (id) => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(
+            `http://localhost:3000/api/v1/admin/delete/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        const data = await res.json();
+        alert(data.message);
+
+        setCourses((prev) => prev.filter((c) => c._id !== id));
     };
+
+    // const role = localStorage.getItem("role");
+
 
     return (
         <div className="min-h-screen bg-gray-700 p-10 relative">
@@ -93,7 +76,7 @@ const Course = () => {
                 {courses.map((course) => (
                     <nav
                         key={course._id}
-                        className="border border-white w-72 p-4 rounded-xl text-center text-white bg-gray-800"
+                        className="w-72 p-4 rounded-xl text-center text-white bg-gray-800"
                     >
                         <img
                             src="https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
@@ -108,118 +91,48 @@ const Course = () => {
                             Buy Now
                         </button>
 
-                        {/* {localStorage.getItem("role") === "admin" && ( */}
+
+                        {/* // ----------Delete Button --------- // */}
+                        {/* {role === "admin" && ( */}
                         <button
-                            type="button"
-                            onClick={async () => {
-                                const token = localStorage.getItem("token");
-
-                                const res = await fetch(
-                                    `http://localhost:3000/api/v1/admin/delete/${course._id}`,
-                                    {
-                                        method: "DELETE",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                            Authorization: `Bearer ${token}`,
-                                        },
-                                    }
-                                );
-
-                                const data = await res.json();
-                                alert(data.message);
-
-                                window.location.reload();
-                            }}
-                            className="text-red-600  ml-5"
+                            onClick={() => setShowModal(true)}
+                            className="ml-5"
                         >
                             Delete
                         </button>
                         {/* )} */}
 
+                        {showModal && (
+                            <div className="fixed inset-0 bg-opacity-60 flex justify-center items-center">
+                                <div className="bg-white rounded-xl p-6 w-80 text-center">
+                                    <h2 className="text-xl font-semibold mb-4 text-black">
+                                        Are you sure you want to delete this course?
+                                    </h2>
+
+                                    <div className="flex justify-center gap-4">
+                                        <button
+                                            onClick={() => setShowModal(false)}
+                                        >
+                                            Cancel
+                                        </button>
+
+                                        <button
+                                            onClick={() => {
+                                                handleDelete(course._id);
+                                                setShowModal(false);
+                                            }}
+                                            className=""
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </nav>
                 ))}
             </div>
-
-            <div className="p-6 text-center">
-                <button
-                    onClick={() => setOpen(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-                >
-                    Add Course
-                </button>
-            </div>
-
-            {open && (
-                <div
-                    id="overlay"
-                    onClick={handleOverlayClick}
-                    className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50"
-                >
-                    <div
-                        className="bg-white p-6 rounded-2xl shadow-lg w-96"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <h2 className="text-xl font-semibold mb-4 text-center">
-                            Add New Course
-                        </h2>
-
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                name="title"
-                                value={newCourse.title}
-                                onChange={(e) =>
-                                    setNewCourse({ ...newCourse, title: e.target.value })
-                                }
-                                placeholder="Course Name"
-                                className="border p-2 rounded w-full mb-3 text-black"
-                                required
-                            />
-
-                            <input
-                                type="text"
-                                name="description"
-                                value={newCourse.description}
-                                onChange={(e) =>
-                                    setNewCourse({ ...newCourse, description: e.target.value })
-                                }
-                                placeholder="Description"
-                                className="border p-2 rounded w-full mb-3 text-black"
-                                required
-                            />
-
-                            <input
-                                type="number"
-                                name="price"
-                                value={newCourse.price}
-                                onChange={(e) =>
-                                    setNewCourse({ ...newCourse, price: e.target.value })
-                                }
-                                placeholder="Price"
-                                className="border p-2 rounded w-full mb-3 text-black"
-                                required
-                            />
-
-                            <div className="flex justify-end">
-                                <button
-                                    type="button"
-                                    onClick={() => setOpen(false)}
-                                    className="bg-gray-400 text-white px-4 py-2 rounded-lg"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="ml-2 bg-green-600 text-white px-4 py-2 rounded-lg"
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </div>
+        </div >
     );
 };
 
