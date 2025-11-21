@@ -23,7 +23,7 @@ const AddCourse = () => {
             });
 
             const data = await res.json();
-            alert(data.message || "Course added successfully!");
+            // alert(data.message || "Course added successfully!");
 
             if (data.course) {
                 setCourses([...courses, data.course]);

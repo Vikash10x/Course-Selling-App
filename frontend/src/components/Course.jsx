@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Delete from "./Delete";
+import Buy from "./Buy";
 
 const Course = () => {
     const [courses, setCourses] = useState([]);
-    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,48 +27,8 @@ const Course = () => {
     }, []);
 
 
-    const handleBuy = async (id) => {
-        const token = localStorage.getItem("token");
-
-        const res = await fetch("http://localhost:3000/api/v1/user/purchase", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ courseId: id })
-        })
-        const data = await res.json();
-        alert(data.message);
-        // console.log(data.message);
-    }
-
-
-    const handleDelete = async (id) => {
-        const token = localStorage.getItem("token");
-
-        const res = await fetch(
-            `http://localhost:3000/api/v1/admin/delete/${id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        const data = await res.json();
-        alert(data.message);
-
-        setCourses((prev) => prev.filter((c) => c._id !== id));
-    };
-
-    // const role = localStorage.getItem("role");
-
-
     return (
-        <div className="min-h-screen bg-gray-700 p-10 relative">
+        <div className="h-full bg-gray-700 p-6 relative">
             <h1 className="text-white text-3xl font-bold text-center mb-6">
                 Available Courses
             </h1>
@@ -76,62 +37,34 @@ const Course = () => {
                 {courses.map((course) => (
                     <nav
                         key={course._id}
-                        className="w-72 p-4 rounded-xl text-center text-white bg-gray-800"
+                        className="w-72 p-4 rounded-xl text-center text-white bg-gray-800 shadow-md"
                     >
                         <img
                             src="https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
                             alt="Course"
-                            className="rounded-lg w-full h-40 mb-2"
+                            className="rounded-lg w-full h-40 object-cover mb-3"
                         />
+
                         <h2 className="text-2xl font-bold mb-2">{course.title}</h2>
-                        <p className="text-sm">{course.description}</p>
-                        <p className="text-sm mt-1 mb-2">Price: ₹{course.price}</p>
-                        <button
-                            onClick={() => handleBuy(course._id)}>
-                            Buy Now
-                        </button>
+                        <p className="text-sm text-gray-300">{course.description}</p>
 
+                        <p className="text-sm mt-2 mb-4 font-semibold">
+                            Price: ₹{course.price}
+                        </p>
 
-                        {/* // ----------Delete Button --------- // */}
-                        {/* {role === "admin" && ( */}
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="ml-5"
-                        >
-                            Delete
-                        </button>
-                        {/* )} */}
+                        <div className="flex items-center justify-center gap-6">
+                            {localStorage.getItem("token") && (
+                                <Buy id={course._id} setCourses={setCourses} />
+                            )}
 
-                        {showModal && (
-                            <div className="fixed inset-0 bg-opacity-60 flex justify-center items-center">
-                                <div className="bg-white rounded-xl p-6 w-80 text-center">
-                                    <h2 className="text-xl font-semibold mb-4 text-black">
-                                        Are you sure you want to delete this course?
-                                    </h2>
-
-                                    <div className="flex justify-center gap-4">
-                                        <button
-                                            onClick={() => setShowModal(false)}
-                                        >
-                                            Cancel
-                                        </button>
-
-                                        <button
-                                            onClick={() => {
-                                                handleDelete(course._id);
-                                                setShowModal(false);
-                                            }}
-                                            className=""
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                            {localStorage.getItem("token") && localStorage.getItem("role") === "admin" && (
+                                <Delete id={course._id} setCourses={setCourses} />
+                            )}
+                        </div>
                     </nav>
                 ))}
             </div>
+
         </div >
     );
 };

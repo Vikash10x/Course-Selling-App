@@ -26,20 +26,27 @@ const Signin = () => {
         })
             .then(res => res.json())
             .then(data => {
-                // console.log("Login Response", data);
                 if (data.token) {
+
+                    // save token
                     localStorage.setItem("token", data.token);
-                    // console.log("Saved token:", localStorage.getItem("token"));
+
+                    // save role
+                    if (data.role) {
+                        localStorage.setItem("role", data.role);
+                        console.log("Roleeeee: ", data.role);
+                    }
+
                     setError("");
                     setTimeout(() => navigate("/course"), 200);
-                } else {
-                    setError(data.message)
-                }
-            }).catch((err) => {
-                console.log(err);
 
+                } else {
+                    setError(data.message);
+                }
             })
+            .catch(err => console.log(err));
     };
+
 
     return (
         <div className='bg-white rounded-2xl p-8 w-1/4 max-w-md text-black m-auto mt-10'>
