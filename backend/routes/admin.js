@@ -84,9 +84,6 @@ adminRouter.delete("/delete/:id", authMiddleware, async function (req, res) {
     }
 });
 
-
-
-
 module.exports = {
     adminRouter: adminRouter
 }

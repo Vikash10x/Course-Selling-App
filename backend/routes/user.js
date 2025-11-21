@@ -48,7 +48,8 @@ userRouter.post("/signin", async function (req, res) {
         console.log(token);
         res.json({
             message: "Signin successful",
-            token: token
+            token: token,
+            role: user.role
         })
     } else if (user && user.password !== password) {
         res.status(403).json({
