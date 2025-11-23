@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 const userRouter = Router();
-const { userModel, purchaseModel } = require("../db");
+const { userModel, purchaseModel, listModel } = require("../db");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware/auth");
 const { JWT_SECRET } = require("../config");
@@ -108,6 +108,29 @@ userRouter.get("/my-course", authMiddleware, async function (req, res) {
             Error: e.message
         })
     }
+})
+
+userRouter.post("/list", authMiddleware, async function (req, res) {
+    // const courseId = req.body;
+
+    const { title, description, courseId } = req.body;
+
+    try {
+        await listModel.create({
+            title,
+            description,
+            courseId
+        })
+        res.json({
+            message: "list successful: "
+        })
+    } catch (e) {
+        res.json({
+            message: "Something went wrong",
+            Error: e.message
+        })
+    }
+
 })
 module.exports = {
     userRouter

@@ -23,6 +23,15 @@ const courseSchema = new Schema({
   creatorId: ObjectId,
 });
 
+const listSchema = new Schema({
+  title: String,
+  description: String,
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "course",
+  }
+})
+
 
 const purchaseSchema = new Schema({
   userId: {
@@ -39,9 +48,11 @@ const purchaseSchema = new Schema({
 const userModel = mongoose.model("user", userSchema);
 const courseModel = mongoose.model("course", courseSchema);
 const purchaseModel = mongoose.model("purchase", purchaseSchema);
+const listModel = mongoose.model("list", listSchema);
 
 module.exports = {
   userModel,
-  courseModel,  // -------------------------------------------------------
+  courseModel,
   purchaseModel,
+  listModel
 };
