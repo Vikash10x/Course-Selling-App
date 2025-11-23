@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import "../index.css";
+
 
 const AddCourse = () => {
     const [open, setOpen] = useState(false);
@@ -49,7 +51,7 @@ const AddCourse = () => {
             <div className="p-6 text-center">
                 <button
                     onClick={() => setOpen(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    className="btn"
                 >
                     Add Course
                 </button>
@@ -106,21 +108,25 @@ const AddCourse = () => {
                                 required
                             />
 
-                            <div className="flex justify-end">
+                            <div className="flex justify-end space-x-3">
                                 <button
                                     type="button"
                                     onClick={() => setOpen(false)}
-                                    className="bg-gray-400 text-white px-4 py-2 rounded-lg"
+                                    className="px-5 py-2 rounded-xl border border-red-400 text-red-600 font-semibold 
+                   hover:bg-red-50 hover:scale-105 transition-all duration-200 shadow-sm cursor-pointer"
                                 >
                                     Cancel
                                 </button>
+
                                 <button
                                     type="submit"
-                                    className="ml-2 bg-green-600 text-white px-4 py-2 rounded-lg"
+                                    className="px-5 py-2 rounded-xl bg-green-600 text-white font-semibold 
+                   hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-md cursor-pointer"
                                 >
                                     Submit
                                 </button>
                             </div>
+
                         </form>
                     </div>
                 </div>

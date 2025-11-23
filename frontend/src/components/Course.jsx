@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Delete from "./Delete";
 import Buy from "./Buy";
+import List from "./List";
 
 const Course = () => {
     const [courses, setCourses] = useState([]);
@@ -53,8 +54,12 @@ const Course = () => {
                         </p>
 
                         <div className="flex items-center justify-center gap-6">
+
                             {localStorage.getItem("token") && (
-                                <Buy id={course._id} setCourses={setCourses} />
+                                <div>
+                                    <Buy id={course._id} setCourses={setCourses} />
+                                    <List course={course} />
+                                </div>
                             )}
 
                             {localStorage.getItem("token") && localStorage.getItem("role") === "admin" && (

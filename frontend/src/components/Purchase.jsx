@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 const Purchase = () => {
     const [purchases, setPurchases] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPurchases = async () => {
             const token = localStorage.getItem("token");
-            console.log("token: ", token);
 
             const res = await fetch("http://localhost:3000/api/v1/user/my-course", {
                 headers: {
@@ -17,20 +17,21 @@ const Purchase = () => {
 
             const data = await res.json();
 
-            console.log("Purchased Courses:", data.purchases);
-
-            if (data.purchases) {
-                setPurchases(data.purchases);
-            }
+            setPurchases(data.purchases || []);
+            setLoading(false);
         };
 
         fetchPurchases();
     }, []);
 
+    if (loading) {
+        return <h2 className="text-xl font-bold text-white">Loading...</h2>;
+    }
+
     return (
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {purchases.length === 0 ? (
-                <h2 className="text-xl font-bold">No Purchased Courses</h2>
+                <h2 className="text-xl font-bold text-white">No Purchased Courses</h2>
             ) : (
                 purchases
                     .filter(p => p.courseId)
@@ -50,7 +51,6 @@ const Purchase = () => {
                     ))
             )}
         </div>
-
     );
 };
 

@@ -25,17 +25,17 @@ const Navbar = () => {
 
                     {!token && (
                         <>
-                            <Link to="/signup" className="mr-5"><button>Signup</button></Link>
-                            <Link to="/signin"><button>Signin</button></Link>
+                            <Link to="/signup" className="mr-5"><button className="btn">Signup</button></Link>
+                            <Link to="/signin"><button className="btn">Signin</button></Link>
                         </>
                     )}
 
                     {token && (
                         <div className="flex justify-center items-center">
-                            <Link to="/course"><button>Courses</button></Link>
+                            <Link to="/course"><button className="btn">Courses</button></Link>
                             <AddCourse />
-                            <Link to="/purchase"><button>My Courses</button></Link>
-                            <button className="ml-5"
+                            <Link to="/purchase"><button className="btn">My Courses</button></Link>
+                            <button className="ml-5 btn"
                                 onClick={handleLogout}
                             >
                                 Logout

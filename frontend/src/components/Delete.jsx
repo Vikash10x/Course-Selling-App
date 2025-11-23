@@ -27,7 +27,7 @@ const Delete = ({ id, setCourses }) => {
     return (
         <div>
             <button
-                onClick={() => setShowModal(true)}
+                onClick={() => setShowModal(true)} className='btn'
             >
                 Delete
             </button>
@@ -39,22 +39,34 @@ const Delete = ({ id, setCourses }) => {
                             Are you sure you want to delete this course?
                         </h2>
 
-                        <div className="flex justify-center gap-5">
+                        <div className="flex justify-center gap-5 mt-4">
+
+                            {/* No Button */}
                             <button
                                 onClick={() => setShowModal(false)}
+                                className="px-6 py-2 rounded-xl border border-gray-400 text-gray-700 font-semibold 
+                   bg-white/60 backdrop-blur-sm shadow-sm
+                   hover:bg-red-50 hover:border-red-400 hover:text-red-600
+                   hover:scale-105 transition-all duration-200 cursor-pointer"
                             >
                                 Cancel
                             </button>
 
+                            {/* Yes Button */}
                             <button
                                 onClick={() => {
                                     handleDelete(id);
                                     setShowModal(false);
                                 }}
+                                className="px-6 py-2 rounded-xl bg-green-600 text-white font-semibold 
+                   shadow-md hover:bg-green-700 hover:scale-105 
+                   transition-all duration-200 cursor-pointer"
                             >
                                 Delete
                             </button>
+
                         </div>
+
                     </div>
                 </div>
             )}
