@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const mongoose = require("mongoose");
 
 const userRouter = Router();
 const { userModel, purchaseModel, listModel } = require("../db");
@@ -110,28 +111,29 @@ userRouter.get("/my-course", authMiddleware, async function (req, res) {
     }
 })
 
-userRouter.post("/list", authMiddleware, async function (req, res) {
-    // const courseId = req.body;
 
-    const { title, description, courseId } = req.body;
+userRouter.get("/list/:id", authMiddleware, async function (req, res) {
+    const courseId = req.params.id;
 
     try {
-        await listModel.create({
-            title,
-            description,
-            courseId
-        })
-        res.json({
-            message: "list successful: "
-        })
-    } catch (e) {
-        res.json({
-            message: "Something went wrong",
-            Error: e.message
-        })
-    }
+        const list = await listModel.find({
+            courseId: new mongoose.Types.ObjectId(courseId)
+        });
 
-})
+        res.json({
+            message: "List fetched successfully",
+            list,
+        });
+
+    } catch (e) {
+        res.status(500).json({
+            message: "Something went wrong",
+            error: e.message,
+        });
+    }
+});
+
+
 module.exports = {
     userRouter
 }
