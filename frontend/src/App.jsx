@@ -9,7 +9,6 @@ import Purchase from './components/Purchase';
 import AddCourse from './components/AddCourse';
 // import { List } from 'lucide-react';
 import List from './components/List';
-import js from '@eslint/js';
 
 
 function App() {
@@ -23,7 +22,7 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/course" element={<Course />} />
         <Route path="/purchase" element={<Purchase />} />
-        <Route path="/list/:id" element={<List />} />
+        <Route path="/course/:id" element={<List />} />
       </Routes>
     </div>
   );

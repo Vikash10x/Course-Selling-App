@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Delete from "./Delete";
 import Buy from "./Buy";
-import List from "./List";
+import { useNavigate } from "react-router";
+
 
 const Course = () => {
     const [courses, setCourses] = useState([]);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,9 +39,10 @@ const Course = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
                 {courses.map((course) => (
-                    <nav
+
+                    <nav onClick={() => navigate(`/course/${course._id}`, { state: { course } })}
                         key={course._id}
-                        className="w-72 p-4 rounded-xl text-center text-white bg-gray-800 shadow-md"
+                        className="w-72 p-4 rounded-xl text-center text-white bg-gray-800 shadow-md cursor-pointer"
                     >
                         <img
                             src="https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
@@ -58,7 +62,6 @@ const Course = () => {
                             {localStorage.getItem("token") && (
                                 <div>
                                     <Buy id={course._id} setCourses={setCourses} />
-                                    <List course={course} />
                                 </div>
                             )}
 
