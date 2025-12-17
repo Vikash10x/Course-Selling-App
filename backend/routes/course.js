@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const courseRouter = Router();
-const { courseModel, purchaseModel } = require("../db");
+const { courseModel, purchaseModel, listModel } = require("../db");
 const { authMiddleware } = require("../middleware/auth")
+const mongoose = require("mongoose");
 // const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -63,6 +64,24 @@ courseRouter.get("/preview", async function (req, res) {
         });
     }
 });
+
+courseRouter.post("/list/:id", authMiddleware, async (req, res) => {
+    const courseId = req.params.id;
+    const { title, description } = req.body;
+
+    const newItem = await listModel.create({
+        title,
+        description,
+        courseId
+
+    });
+
+    res.json({
+        message: "List item created",
+        item: newItem
+    });
+});
+
 
 module.exports = {
     courseRouter: courseRouter

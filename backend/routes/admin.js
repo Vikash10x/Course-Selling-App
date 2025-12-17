@@ -6,33 +6,40 @@ const { JWT_SECRET } = require("../config");
 const { authMiddleware } = require("../middleware/auth");
 
 adminRouter.post("/course", authMiddleware, async function (req, res) {
-    // console.log(adminMiddleware);
-    const adminId = req.user.id;
-    const role = req.user.role;
-    console.log(role);
+    try {
+        const adminId = req.user.id;
 
-    if (role !== "admin") {
-        res.json({
-            message: "Only Admins are allowed to create courses. "
-        })
-    }
-    else {
-        const { title, description, price } = req.body;
+        const { title, description, price, images } = req.body;
+
+        if (!title || !description || !price) {
+            return res.status(400).json({
+                message: "All fields are required",
+            });
+        }
 
         const course = await courseModel.create({
-            title: title,
-            description: description,
-            price: price,
-            creatorId: adminId
-        })
+            title,
+            description,
+            price,
+            creatorId: adminId,
+            images: images || [
+                "http://localhost:3000/uploads/react.png"
+            ],
+        });
 
-        res.json({
-            message: "course created successfully",
-            courseId: course._id
-        })
+        res.status(201).json({
+            message: "Course created successfully",
+            courseId: course._id,
+        });
+
+    } catch (error) {
+        console.error("Create course error:", error);
+        res.status(500).json({
+            message: "Internal server error",
+        });
     }
+});
 
-})
 
 adminRouter.get("/course", async (req, res) => {
     const courses = await courseModel.find({

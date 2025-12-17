@@ -112,9 +112,30 @@ userRouter.get("/my-course", authMiddleware, async function (req, res) {
 })
 
 
+// userRouter.post("/list/:id", authMiddleware, async function (req, res) {
+//     const { courseId } = req.body;
+
+//     try {
+//         const list = await listModel.create({
+//             courseId
+//         });
+
+//         res.json({
+//             message: "List fetched successfully",
+//             list
+//         });
+
+//     } catch (e) {
+//         res.status(500).json({
+//             message: "Something went wrong",
+//             error: e.message,
+//         });
+//     }
+// });
+
+
 userRouter.get("/list/:id", authMiddleware, async function (req, res) {
     const courseId = req.params.id;
-
     try {
         const list = await listModel.find({
             courseId: new mongoose.Types.ObjectId(courseId)
@@ -122,7 +143,7 @@ userRouter.get("/list/:id", authMiddleware, async function (req, res) {
 
         res.json({
             message: "List fetched successfully",
-            list,
+            list: list
         });
 
     } catch (e) {
