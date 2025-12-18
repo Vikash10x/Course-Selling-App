@@ -22,9 +22,6 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
             description,
             price,
             creatorId: adminId,
-            images: images || [
-                "http://localhost:3000/uploads/react.png"
-            ],
         });
 
         res.status(201).json({
