@@ -32,7 +32,7 @@ const Navbar = () => {
 
                     {token && (
                         <div className="flex justify-center items-center">
-                            <Link to="/course"><button className="btn">Courses</button></Link>
+                            <Link to="/course"><button className="btn">All Courses</button></Link>
                             <AddCourse />
                             <Link to="/purchase"><button className="btn">My Courses</button></Link>
                             <button className="ml-5 btn"

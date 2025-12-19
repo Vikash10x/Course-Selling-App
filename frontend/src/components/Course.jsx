@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Delete from "./Delete";
 import Buy from "./Buy";
-import { useNavigate } from "react-router";
-
+import { useNavigate } from "react-router-dom";
 
 const Course = () => {
     const [courses, setCourses] = useState([]);
@@ -40,15 +39,12 @@ const Course = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
                 {courses.map((course) => (
 
-                    <nav onClick={() => navigate(`/course/${course._id}`, { state: { course } })}
+                    <div onClick={() => navigate(`/course/${course._id}`, { state: { course } })}
                         key={course._id}
                         className="w-72 p-4 rounded-xl text-center text-white bg-gray-800 shadow-md cursor-pointer"
                     >
-                        <img
-                            src="https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
-                            alt="Course"
-                            className="rounded-lg w-full h-40 object-cover mb-3"
-                        />
+                        <img src="https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
+                            alt="Course" />
 
                         <h2 className="text-2xl font-bold mb-2">{course.title}</h2>
                         <p className="text-sm text-gray-300">{course.description}</p>
@@ -58,18 +54,22 @@ const Course = () => {
                         </p>
 
                         <div className="flex items-center justify-center gap-6">
+                            <div
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Buy id={course._id} setCourses={setCourses} />
+                            </div>
 
-                            {localStorage.getItem("token") && (
-                                <div>
-                                    <Buy id={course._id} setCourses={setCourses} />
-                                </div>
-                            )}
-
-                            {localStorage.getItem("token") && localStorage.getItem("role") === "admin" && (
-                                <Delete id={course._id} setCourses={setCourses} />
-                            )}
+                            {localStorage.getItem("token") &&
+                                localStorage.getItem("role") === "admin" && (
+                                    <div
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <Delete id={course._id} setCourses={setCourses} />
+                                    </div>
+                                )}
                         </div>
-                    </nav>
+                    </div>
                 ))}
             </div>
 
