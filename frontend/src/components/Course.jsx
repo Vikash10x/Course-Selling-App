@@ -3,10 +3,15 @@ import Delete from "./Delete";
 import Buy from "./Buy";
 import { useNavigate } from "react-router-dom";
 
+const courseImages = [
+    "/Images/img1.jpeg",
+    "/Images/img2.jpeg",
+    "/Images/img3.jpeg",
+];
+
 const Course = () => {
     const [courses, setCourses] = useState([]);
     const navigate = useNavigate();
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -14,66 +19,67 @@ const Course = () => {
                 const token = localStorage.getItem("token");
                 const res = await fetch("http://localhost:3000/api/v1/admin/course", {
                     headers: {
-                        "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
                 });
                 const data = await res.json();
-                if (data.courses && data.courses.length > 0) {
+                if (data.courses) {
                     setCourses(data.courses);
                 }
             } catch (err) {
-                console.error("Error fetching courses:", err);
+                console.log(err);
             }
         };
         fetchData();
     }, []);
 
-
     return (
-        <div className="h-full bg-gray-700 p-6 relative">
+        <div className="bg-gray-700 p-6 min-h-screen">
             <h1 className="text-white text-3xl font-bold text-center mb-6">
                 Available Courses
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
-                {courses.map((course) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {courses.map((course, index) => {
+                    const image = courseImages[index % courseImages.length];
 
-                    <div onClick={() => navigate(`/course/${course._id}`, { state: { course } })}
-                        key={course._id}
-                        className="w-72 p-4 rounded-xl text-center text-white bg-gray-800 shadow-md cursor-pointer"
-                    >
-                        <img src="https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
-                            alt="Course" />
+                    return (
+                        <div
+                            key={course._id}
+                            onClick={() =>
+                                navigate(`/course/${course._id}`, {
+                                    state: { image, price: course.price },
+                                })
+                            }
+                            className="bg-gray-800 p-3 rounded-sm text-white cursor-pointer hover:scale-105 duration-200 text-center"
+                        >
+                            <img
+                                src={image}
+                                alt="Course"
+                                className="w-full h-40 object-cover rounded-sm mb-3"
+                            />
 
-                        <h2 className="text-2xl font-bold mb-2">{course.title}</h2>
-                        <p className="text-sm text-gray-300">{course.description}</p>
+                            <h2 className="text-xl font-bold">{course.title}</h2>
+                            <p className="text-sm text-gray-300">{course.description}</p>
 
-                        <p className="text-sm mt-2 mb-4 font-semibold">
-                            Price: ₹{course.price}
-                        </p>
+                            <p className="mt-2 font-semibold">₹{course.price}</p>
 
-                        <div className="flex items-center justify-center gap-6">
-                            <div
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <Buy id={course._id} setCourses={setCourses} />
-                            </div>
+                            <div className="flex justify-center gap-6 mt-5">
+                                <div onClick={(e) => e.stopPropagation()}>
+                                    <Buy id={course._id} setCourses={setCourses} />
+                                </div>
 
-                            {localStorage.getItem("token") &&
-                                localStorage.getItem("role") === "admin" && (
-                                    <div
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
+                                {localStorage.getItem("role") === "admin" && (
+                                    <div onClick={(e) => e.stopPropagation()}>
                                         <Delete id={course._id} setCourses={setCourses} />
                                     </div>
                                 )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
-
-        </div >
+        </div>
     );
 };
 

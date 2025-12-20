@@ -3,24 +3,23 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 const CourseDetail = () => {
     const { id } = useParams();
-    const { state } = useLocation();
     const navigate = useNavigate();
+    const { state } = useLocation();
 
+    const [image, setImage] = useState(state?.image || "/Images/img1.jpeg");
+    const [price, setPrice] = useState(state?.price || 0);
     const [course, setCourse] = useState(null);
-
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [buyLoading, setBuyLoading] = useState(false);
 
     useEffect(() => {
-        if (!course) fetchCourseDetails();
+        fetchCourseDetails();
     }, [id]);
-
 
     const fetchCourseDetails = async () => {
         try {
             setLoading(true);
-
             const token = localStorage.getItem("token");
 
             const res = await fetch(
@@ -32,32 +31,19 @@ const CourseDetail = () => {
                 }
             );
 
-            if (!res.ok) {
-                setCourse(null);
-                return;
-            }
-
             const data = await res.json();
-            console.log("API DATA ", data);
-
-            if (data?.list && data.list.length > 0) {
+            if (data?.list?.length > 0) {
                 setCourse(data.list[0]);
-            } else {
-                setCourse(null);
             }
-
         } catch (err) {
             console.log(err);
-            setCourse(null);
         } finally {
             setLoading(false);
         }
     };
 
-
     const handleBuy = async () => {
         const token = localStorage.getItem("token");
-
         if (!token) {
             navigate("/signin");
             return;
@@ -65,74 +51,47 @@ const CourseDetail = () => {
 
         try {
             setBuyLoading(true);
-
-            const res = await fetch(
-                "http://localhost:3000/api/v1/user/purchase",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        courseId: id,
-                    }),
-                }
-            );
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                alert(data.message || "Buy failed");
-                return;
-            }
-
+            await fetch("http://localhost:3000/api/v1/user/purchase", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ courseId: id }),
+            });
             navigate("/Purchase");
-
         } catch (err) {
             console.log(err);
-            alert("Something went wrong");
         } finally {
             setBuyLoading(false);
             setShowModal(false);
         }
     };
 
-
-    if (loading) {
+    if (loading || !course) {
         return <p className="text-white text-center mt-10">Loading...</p>;
     }
 
-    if (!course) {
-        return <p className="text-white text-center mt-10">Course not found</p>;
-    }
-
-
     return (
         <div className="min-h-screen bg-gray-900 text-white px-6 py-10">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 border">
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
 
                 <img
-                    src={course.image}
-                    className="rounded-xl shadow-lg"
+                    src={image}
+                    alt="Course"
+                    className="rounded shadow-lg hover:scale-104 duration-200"
                 />
 
                 <div>
-                    <h1 className="text-4xl font-bold mb-4">
-                        {course.title}
-                    </h1>
-
-                    <p className="text-gray-300 mb-6">
-                        {course.description}
-                    </p>
-
+                    <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
+                    <p className="text-gray-300 mb-6">{course.description}</p>
                     <p className="text-2xl font-semibold mb-6">
-                        Price: ₹{course.price}
+                        Price: ₹{price}
                     </p>
 
                     <button
                         onClick={() => setShowModal(true)}
-                        className="py-3 px-8 rounded bg-blue-600 font-bold hover:bg-blue-800 transition cursor-pointer"
+                        className="py-3 px-8 bg-blue-600 rounded font-bold hover:bg-blue-800 transition cursor-pointer"
                     >
                         Buy Now
                     </button>
@@ -142,7 +101,7 @@ const CourseDetail = () => {
             {showModal && (
                 <div
                     onClick={() => setShowModal(false)}
-                    className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center"
+                    className="fixed inset-0 bg-opacity-60 flex justify-center items-center"
                 >
                     <div
                         onClick={(e) => e.stopPropagation()}
