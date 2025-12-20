@@ -9,6 +9,7 @@ import Purchase from './components/Purchase';
 import AddCourse from './components/AddCourse';
 // import { List } from 'lucide-react';
 import List from './components/List';
+import Buy from './components/Buy';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/course" element={<Course />} />
         <Route path="/purchase" element={<Purchase />} />
         <Route path="/course/:id" element={<List />} />
+        <Route path="/buy" element={<Buy />} />
       </Routes>
     </div>
   );
