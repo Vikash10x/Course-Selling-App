@@ -34,6 +34,8 @@ const CourseDetail = () => {
             const data = await res.json();
             if (data?.list?.length > 0) {
                 setCourse(data.list[0]);
+                console.log(data.list[0]);
+
             }
         } catch (err) {
             console.log(err);
@@ -84,14 +86,60 @@ const CourseDetail = () => {
 
                 <div>
                     <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
-                    <p className="text-gray-300 mb-6">{course.description}</p>
                     <p className="text-2xl font-semibold mb-6">
                         Price: ₹{price}
                     </p>
 
+                    <h2 className="text-2xl font-bold mt-6">Course Overview</h2>
+                    <p className="text-gray-300 mb-6">{course.description}</p>
+
+
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold mb-3">What you will learn</h2>
+                        <ul className="list-disc pl-6 text-gray-300 space-y-2">
+                            {course.learnings?.map((item, index) => (
+                                <li key={index}>{item}</li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold mb-3">Course Features</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {course.features?.map((feature, index) => (
+                                <div
+                                    key={index}
+                                    className="bg-gray-800 px-4 py-2 rounded"
+                                >
+                                    {feature}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-8 bg-gray-800 rounded-lg p-5">
+                        <h2 className="text-2xl font-bold mb-4">Course Details</h2>
+
+                        <div className="space-y-2 text-gray-300">
+                            <p><span className="font-semibold text-white">Duration:</span> {course.details?.duration}</p>
+                            <p><span className="font-semibold text-white">Level:</span> {course.details?.level}</p>
+                            <p><span className="font-semibold text-white">Language:</span> {course.details?.language}</p>
+                            <p><span className="font-semibold text-white">Projects:</span> {course.details?.projects}</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold mb-3">Who Can Join</h2>
+                        <ul className="list-disc pl-6 text-gray-300 space-y-2">
+                            {course.whoCanJoin?.map((person, index) => (
+                                <li key={index}>{person}</li>
+                            ))}
+                        </ul>
+                    </div>
+
                     <button
                         onClick={() => setShowModal(true)}
-                        className="py-3 px-8 bg-blue-600 rounded font-bold hover:bg-blue-800 transition cursor-pointer"
+                        className="py-3 px-8 bg-blue-600 rounded font-bold hover:bg-blue-800 transition cursor-pointer mt-8"
                     >
                         Buy Now
                     </button>

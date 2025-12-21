@@ -38,7 +38,7 @@ const Purchase = () => {
     }
 
     return (
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-screen bg-gray-700">
             {purchases.length === 0 ? (
                 <h2 className="text-xl font-bold text-white">
                     No Purchased Courses
@@ -49,7 +49,7 @@ const Purchase = () => {
                     .map((p) => (
                         <div
                             key={p._id}
-                            className="border border-white p-4 rounded-xl text-center text-white bg-gray-800"
+                            className="p-4 rounded-sm text-center text-white bg-gray-800 "
                         >
                             <img
                                 src={
@@ -57,10 +57,10 @@ const Purchase = () => {
                                     "https://100x-b-mcdn.akamai.net.in/images/ds.jpeg"
                                 }
                                 alt="Course"
-                                className="rounded-lg w-full h-40 mb-2 object-cover"
+                                className="rounded-sm w-full h-50 mb-4 object-cover"
                             />
 
-                            <h2 className="text-2xl font-bold mb-2">
+                            <h2 className="text-xl font-bold mb-3">
                                 {p.courseId.title}
                             </h2>
 

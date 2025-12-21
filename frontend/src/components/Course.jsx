@@ -4,9 +4,11 @@ import Buy from "./Buy";
 import { useNavigate } from "react-router-dom";
 
 const courseImages = [
-    "/Images/img1.jpeg",
-    "/Images/img2.jpeg",
-    "/Images/img3.jpeg",
+    "/Images/img1.jpg",
+    "/Images/img2.png",
+    "/Images/img3.webp",
+    "/Images/img4.webp",
+    "/Images/img5.webp",
 ];
 
 const Course = () => {
@@ -35,7 +37,7 @@ const Course = () => {
 
     return (
         <div className="bg-gray-700 p-6 min-h-screen">
-            <h1 className="text-white text-3xl font-bold text-center mb-6">
+            <h1 className="text-white text-3xl font-bold text-center mb-12 mt-4">
                 Available Courses
             </h1>
 
@@ -56,7 +58,7 @@ const Course = () => {
                             <img
                                 src={image}
                                 alt="Course"
-                                className="w-full h-40 object-cover rounded-sm mb-3"
+                                className="w-full h-50 object-cover rounded-sm mb-3"
                             />
 
                             <h2 className="text-xl font-bold">{course.title}</h2>
