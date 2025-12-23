@@ -19,18 +19,59 @@ const userSchema = new Schema({
 const courseSchema = new Schema({
   title: String,
   description: String,
+
+  learnings: {
+    type: [String],
+    default: []
+  },
+
+  features: {
+    type: [String],
+    default: []
+  },
+
+  details: {
+    duration: String,
+    level: String,
+    language: String,
+    projects: String
+  },
+
+  whoCanJoin: {
+    type: [String],
+    default: []
+  },
+
   price: Number,
-  creatorId: ObjectId,
+
+  creatorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user"
+  }
 });
+
 
 const listSchema = new Schema({
   title: String,
   description: String,
+
+  learnings: [String],
+  features: [String],
+
+  details: {
+    duration: String,
+    level: String,
+    language: String,
+    projects: String
+  },
+
+  whoCanJoin: [String],
+
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "course",
+    ref: "course"
   }
-})
+});
 
 
 const purchaseSchema = new Schema({
