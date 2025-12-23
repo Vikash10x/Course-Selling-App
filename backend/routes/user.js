@@ -117,6 +117,8 @@ userRouter.get("/list/:id", authMiddleware, async function (req, res) {
         const list = await listModel.find({
             courseId: new mongoose.Types.ObjectId(courseId)
         });
+        console.log("List", list);
+
 
         res.json({
             message: "List fetched successfully",
