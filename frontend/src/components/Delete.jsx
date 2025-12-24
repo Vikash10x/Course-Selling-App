@@ -1,11 +1,18 @@
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom";
 
 const Delete = ({ id, setCourses }) => {
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
 
     const handleDelete = async (id) => {
         const token = localStorage.getItem("token");
+
+        if (!token) {
+            navigate("/signin");
+            return;
+        }
 
         const res = await fetch(
             `http://localhost:3000/api/v1/admin/delete/${id}`,

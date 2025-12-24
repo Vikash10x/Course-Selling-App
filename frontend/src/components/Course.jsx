@@ -36,12 +36,12 @@ const Course = () => {
     }, []);
 
     return (
-        <div className="bg-gray-700 p-6 min-h-screen">
-            <h1 className="text-white text-3xl font-bold text-center mb-12 mt-4">
+        <div className="bg-gray-600 p-6 min-h-screen mt-16 sm:mt-18">
+            <h1 className="text-white text-3xl font-bold text-center mb-5">
                 Available Courses
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
                 {courses.map((course, index) => {
                     const image = courseImages[index % courseImages.length];
 
@@ -53,7 +53,7 @@ const Course = () => {
                                     state: { image, price: course.price },
                                 })
                             }
-                            className="bg-gray-800 p-3 rounded-sm text-white cursor-pointer hover:scale-105 duration-200 text-center"
+                            className="bg-[#101828] p-3 rounded-sm text-white cursor-pointer hover:scale-105 duration-200 text-center"
                         >
                             <img
                                 src={image}

@@ -6,8 +6,8 @@ const CourseDetail = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
 
-    const [image, setImage] = useState(state?.image || "/Images/img1.jpeg");
-    const [price, setPrice] = useState(state?.price || 0);
+    const image = state?.image || "/Images/img1.jpeg";
+    const price = state?.price || 0;
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -61,7 +61,13 @@ const CourseDetail = () => {
                 },
                 body: JSON.stringify({ courseId: id }),
             });
-            navigate("/Purchase");
+
+            navigate("/Purchase", {
+                state: {
+                    image,
+                    price,
+                },
+            });
         } catch (err) {
             console.log(err);
         } finally {
@@ -75,8 +81,8 @@ const CourseDetail = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white px-6 py-10">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="min-h-screen bg-gray-900 text-white px-6 py-10 sm:mt-18 mt-16">
+            <div className="max-w-5xl mx-auto grid grid-cols-1 gap-10">
 
                 <img
                     src={image}
@@ -139,7 +145,7 @@ const CourseDetail = () => {
 
                     <button
                         onClick={() => setShowModal(true)}
-                        className="py-3 px-8 bg-blue-600 rounded font-bold hover:bg-blue-800 transition cursor-pointer mt-8"
+                        className="py-3 px-8 bg-blue-600 rounded font-bold hover:bg-blue-800 transition cursor-pointer mt-8 w-full"
                     >
                         Buy Now
                     </button>

@@ -48,10 +48,10 @@ const AddCourse = () => {
 
     return (
         <div>
-            <div className="p-6 text-center">
+            <div className="text-center">
                 <button
                     onClick={() => setOpen(true)}
-                    className="btn"
+                    className="btn w-full"
                 >
                     Add Course
                 </button>
@@ -61,10 +61,10 @@ const AddCourse = () => {
                 <div
                     id="overlay"
                     onClick={handleOverlayClick}
-                    className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50"
+                    className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 "
                 >
                     <div
-                        className="bg-white p-6 rounded-2xl shadow-lg w-96"
+                        className="bg-white p-6 rounded-2xl shadow-lg w-90 sm:w-96  border border-red-500"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-xl font-semibold mb-4 text-center text-black">

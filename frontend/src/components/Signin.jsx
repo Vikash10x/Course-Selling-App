@@ -47,10 +47,10 @@ const Signin = () => {
     };
 
     return (
-        <div className='bg-white rounded-2xl p-8 w-1/4 max-w-md text-black m-auto mt-10'>
-            <h2 className='text-3xl font-bold text-center text-gray-800 mb-6'>Create Account</h2>
+        <div className='fixed inset-0 bg-black/40 flex items-center justify-center'>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5 bg-white rounded-2xl p-8 max-w-md w-full">
+                <h2 className='text-3xl font-bold text-center text-gray-800 mb-6'>Create Account</h2>
                 <div>
                     <div className="block text-gray-700 font-medium mb-2">
                         Email Address
@@ -100,14 +100,14 @@ const Signin = () => {
                 >
                     SignIn
                 </button>
-            </form>
 
-            <div className='mt-3'>
-                Not have an account?{" "}
-                <span className='text-blue-500 cursor-pointer' onClick={() => navigate("/signup")}>
-                    SignUP
-                </span>
-            </div>
+                <div className='mt-3'>
+                    Not have an account?{" "}
+                    <span className='text-blue-500 cursor-pointer' onClick={() => navigate("/signup")}>
+                        SignUP
+                    </span>
+                </div>
+            </form>
         </div>
     )
 }
