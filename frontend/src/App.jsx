@@ -10,6 +10,7 @@ import AddCourse from './components/AddCourse';
 // import { List } from 'lucide-react';
 import List from './components/List';
 import Buy from './components/Buy';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
         <Route path="/course/:id" element={<List />} />
         <Route path="/buy" element={<Buy />} />
       </Routes>
+
+      {/* <Footer /> */}
     </div>
   );
 }
