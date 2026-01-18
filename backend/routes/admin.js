@@ -11,7 +11,7 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
 
         const { title, description, price, images } = req.body;
 
-        if (!title || !description || !price) {
+        if (!title || !description) {
             return res.status(400).json({
                 message: "All fields are required",
             });
@@ -20,7 +20,6 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
         const course = await courseModel.create({
             title,
             description,
-            price,
             creatorId: adminId,
         });
 

@@ -6,6 +6,7 @@ const { userModel, purchaseModel, listModel } = require("../db");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware/auth");
 const { JWT_SECRET } = require("../config");
+// const { use } = require("react");
 
 userRouter.post("/signup", async function (req, res) {
     const { name, email, password, role } = req.body;
@@ -36,7 +37,7 @@ userRouter.post("/signup", async function (req, res) {
 userRouter.post("/signin", async function (req, res) {
 
     const { email, password } = req.body;
-    // console.log(email, password);
+    console.log(email, password);
 
     const user = await userModel.findOne({
         email: email,
@@ -64,74 +65,59 @@ userRouter.post("/signin", async function (req, res) {
 })
 
 userRouter.post("/purchase", authMiddleware, async function (req, res) {
-
     const { courseId } = req.body;
-    console.log("CourseId: ", courseId);
-
     const userId = req.user.id;
 
-    try {
-        await purchaseModel.create({
-            userId,
-            courseId
-        })
+    await purchaseModel.create({
+        userId,
+        courseId
+    });
 
-        res.json({
-            success: true,
-            message: "Course Purchase Successfully"
-        })
-    } catch (e) {
-        res.json({
-            success: false,
-            message: "Something went Wrong",
-            Error: e.message
-        })
+    res.json({
+        success: true,
+        message: "Course Purchase Successfully"
+    });
+});
 
-    }
-})
 
-userRouter.get("/my-course", authMiddleware, async function (req, res) {
+userRouter.get("/my-course", authMiddleware, async (req, res) => {
     const userId = req.user.id;
+    console.log("ID is: ", userId);
 
-    try {
-        const purchases = await purchaseModel.find({
-            userId,
-        })
-            .populate("courseId");
-        res.json({
-            success: true,
-            purchases
-        })
-    } catch (e) {
-        res.json({
-            success: false,
-            message: "Something went wrong",
-            Error: e.message
-        })
-    }
-})
+
+    const purchases = await purchaseModel
+        .find({ userId })
+        .populate("courseId");   // 👈 VERY IMPORTANT
+
+
+    res.json({
+        success: true,
+        purchases,
+    });
+});
+
 
 userRouter.get("/list/:id", authMiddleware, async function (req, res) {
     const courseId = req.params.id;
-    try {
-        const list = await listModel.find({
-            courseId: new mongoose.Types.ObjectId(courseId)
-        });
-        console.log("List", list);
 
+    try {
+        const list = await listModel.find({ courseId });
+
+        console.log("Fetched List:", list);
 
         res.json({
-            message: "List fetched successfully",
-            list: list
+            success: true,
+            list
         });
-
     } catch (e) {
         res.status(500).json({
+            success: false,
             message: "Something went wrong",
             error: e.message,
         });
     }
 });
+
 
 
 module.exports = {

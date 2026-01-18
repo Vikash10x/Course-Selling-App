@@ -67,19 +67,21 @@ courseRouter.get("/preview", async function (req, res) {
 
 courseRouter.post("/list/:id", authMiddleware, async (req, res) => {
     const courseId = req.params.id;
-    const { title, description, learnings, features, details, whoCanJoin } = req.body;
-    console.log("LOG: ", req.body);
-
-
-    const newItem = await listModel.create({
+    const {
         title,
         description,
-        learnings,
-        features,
-        details,
-        whoCanJoin,
-        courseId
+        price,
+        imageLink,
+        published,
+    } = req.body;
 
+    const newItem = await listModel.create({
+        courseId,
+        title,
+        description,
+        price,
+        imageLink,
+        published,
     });
 
     res.json({
