@@ -36,12 +36,12 @@ const Course = () => {
     }, []);
 
     return (
-        <div className="bg-gray-600 p-6 min-h-screen mt-16 sm:mt-18">
-            <h1 className="text-white text-3xl font-bold text-center mb-5">
+        <div className="p-10 min-h-screen">
+            <h1 className="text-white text-3xl font-bold text-center mb-12">
                 Available Courses
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course, index) => {
                     const image = courseImages[index % courseImages.length];
 
@@ -50,32 +50,45 @@ const Course = () => {
                             key={course._id}
                             onClick={() =>
                                 navigate(`/course/${course._id}`, {
-                                    state: { image, price: course.price },
+                                    state: {
+                                        image,
+                                        description: course.description,
+                                        price: course.price,
+                                    },
                                 })
                             }
-                            className="bg-[#101828] p-3 rounded-sm text-white cursor-pointer hover:scale-105 duration-200 text-center"
+                            className="bg-white rounded-xl overflow-hidden cursor-pointer p-2 
+                       transition transform hover:-translate-y-2 hover:shadow-xl"
                         >
+                            {/* Image */}
                             <img
                                 src={image}
                                 alt="Course"
-                                className="w-full h-50 object-cover rounded-sm mb-3"
+                                className="w-full h-48 object-fill rounded-sm"
                             />
 
-                            <h2 className="text-xl font-bold">{course.title}</h2>
-                            <p className="text-sm text-gray-300">{course.description}</p>
+                            {/* Content */}
+                            <div className="p-5 text-center">
+                                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                                    {course.title}
+                                </h2>
 
-                            <p className="mt-2 font-semibold">₹{course.price}</p>
+                                <p className="text-sm text-gray-600 line-clamp-2">
+                                    {course.description}
+                                </p>
 
-                            <div className="flex justify-center gap-6 mt-5">
-                                <div onClick={(e) => e.stopPropagation()}>
-                                    <Buy id={course._id} setCourses={setCourses} />
-                                </div>
-
-                                {localStorage.getItem("role") === "admin" && (
+                                {/* Actions */}
+                                <div className="flex justify-center gap-4 mt-6">
                                     <div onClick={(e) => e.stopPropagation()}>
-                                        <Delete id={course._id} setCourses={setCourses} />
+                                        <Buy id={course._id} setCourses={setCourses} />
                                     </div>
-                                )}
+
+                                    {localStorage.getItem("role") === "admin" && (
+                                        <div onClick={(e) => e.stopPropagation()}>
+                                            <Delete id={course._id} setCourses={setCourses} />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     );
@@ -83,6 +96,7 @@ const Course = () => {
             </div>
         </div>
     );
+
 };
 
 export default Course;

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "../App.css";
-import { useNavigate } from 'react-router';
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { FaRegEye } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
 
 const Signin = () => {
     const [formdata, setFormdata] = useState({ email: "", password: "" });
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [showPass, setShowPass] = useState(false);
+
     const handleChange = (e) => {
         setFormdata({
             ...formdata,
@@ -18,7 +18,6 @@ const Signin = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formdata);
 
         fetch("http://localhost:3000/api/v1/user/signin", {
             method: "POST",
@@ -28,33 +27,40 @@ const Signin = () => {
             .then(res => res.json())
             .then(data => {
                 if (data.token) {
-
                     localStorage.setItem("token", data.token);
 
                     if (data.role) {
                         localStorage.setItem("role", data.role);
-                        console.log("Roleeeee: ", data.role);
                     }
 
                     setError("");
-                    setTimeout(() => navigate("/course"), 200);
-
+                    navigate("/course");
                 } else {
                     setError(data.message);
                 }
             })
-            .catch(err => console.log(err));
+            .catch(() => setError("Something went wrong"));
     };
 
     return (
-        <div className='fixed inset-0 bg-black/40 flex items-center justify-center'>
+        <div
+            className="fixed inset-0 flex items-center justify-center"
+            onClick={() => navigate(-1)}
+        >
 
-            <form onSubmit={handleSubmit} className="space-y-5 bg-white rounded-2xl p-8 max-w-md w-full">
-                <h2 className='text-3xl font-bold text-center text-gray-800 mb-6'>Create Account</h2>
+            <form
+                onSubmit={handleSubmit}
+                onClick={(e) => e.stopPropagation()}
+                className="space-y-5 bg-white rounded-2xl p-8 max-w-md w-full"
+            >
+                <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+                    Sign In
+                </h2>
+
                 <div>
-                    <div className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-700 font-medium mb-2">
                         Email Address
-                    </div>
+                    </label>
                     <input
                         type="email"
                         name="email"
@@ -67,9 +73,9 @@ const Signin = () => {
                 </div>
 
                 <div>
-                    <div className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-700 font-medium mb-2">
                         Password
-                    </div>
+                    </label>
 
                     <div className="relative">
                         <input
@@ -83,33 +89,35 @@ const Signin = () => {
                         />
 
                         <span
-                            className="absolute right-3 top-2.5 cursor-pointer text-xl z-10"
+                            className="absolute right-3 top-2.5 cursor-pointer text-xl text-gray-600"
                             onClick={() => setShowPass(!showPass)}
                         >
                             {showPass ? <FaRegEyeSlash /> : <FaRegEye />}
                         </span>
-
                     </div>
                 </div>
 
-                <p className='text-red-500'>{error}</p>
+                {error && <p className="text-red-500">{error}</p>}
 
                 <button
                     type="submit"
                     className="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200"
                 >
-                    SignIn
+                    Sign In
                 </button>
 
-                <div className='mt-3'>
-                    Not have an account?{" "}
-                    <span className='text-blue-500 cursor-pointer' onClick={() => navigate("/signup")}>
-                        SignUP
+                <div className="text-center mt-3">
+                    Don’t have an account?{" "}
+                    <span
+                        className="text-blue-500 cursor-pointer font-medium"
+                        onClick={() => navigate("/signup")}
+                    >
+                        Sign Up
                     </span>
                 </div>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default Signin;

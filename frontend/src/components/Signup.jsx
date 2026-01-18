@@ -44,14 +44,20 @@ function App() {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-            <div className="bg-white rounded-2xl p-8 max-w-md w-full">
+        <div
+            className="fixed inset-0 flex items-center justify-center "
+            onClick={() => navigate(-1)}
+        >
+
+            <div
+                className="bg-white rounded-2xl p-8 max-w-md w-full"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
                     Create Account
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Name */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Full Name
@@ -66,7 +72,6 @@ function App() {
                         />
                     </div>
 
-                    {/* Email */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Email Address
@@ -81,7 +86,6 @@ function App() {
                         />
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-2">
                             Password

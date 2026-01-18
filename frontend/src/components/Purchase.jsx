@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -17,7 +18,7 @@ const Purchase = () => {
         const fetchPurchases = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await fetch(
+                const res = await axios.get(
                     "http://localhost:3000/api/v1/user/my-course",
                     {
                         headers: {
@@ -25,8 +26,8 @@ const Purchase = () => {
                         },
                     }
                 );
-                const data = await res.json();
-                setPurchases(data.purchases || []);
+                // const data = await res.json();
+                setPurchases(res.data.purchases || []);
             } catch (err) {
                 console.log(err);
             } finally {
@@ -41,7 +42,7 @@ const Purchase = () => {
     }
 
     return (
-        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-gray-700 mt-16 sm:mt-18">
+        <div className="p-10 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {purchases.map((p, index) => {
                 const image =
                     courseImages[index % courseImages.length];
@@ -49,7 +50,8 @@ const Purchase = () => {
                 return (
                     <div
                         key={p._id}
-                        className="bg-gray-800 p-4 text-white rounded-sm text-center"
+                        className="bg-white rounded-xl overflow-hidden cursor-pointer p-2 
+                       transition transform hover:-translate-y-2 hover:shadow-xl"
                     >
                         <img
                             src={image}
@@ -57,13 +59,16 @@ const Purchase = () => {
                             className="w-full h-48 object-cover rounded-sm mb-3"
                         />
 
-                        <h2 className="text-xl font-bold">
-                            {p.courseId.title}
-                        </h2>
+                        <div className="p-5 text-center text-gray-900">
+                            <h2 className="text-xl font-bold">
+                                {p.courseId?.title || "Course not found"}
+                            </h2>
 
-                        <p className="text-gray-300 text-sm">
-                            {p.courseId.description}
-                        </p>
+                            <p className="text-gray-600 text-sm">
+                                {p.courseId?.description || ""}
+                            </p>
+                        </div>
+
                     </div>
                 );
             })}

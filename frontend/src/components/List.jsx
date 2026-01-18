@@ -1,17 +1,48 @@
 import React, { useEffect, useState } from "react";
+import {
+    Box,
+    Card,
+    CardContent,
+    CardActionArea,
+    CircularProgress,
+    Typography,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const CourseDetail = () => {
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import DownloadIcon from "@mui/icons-material/Download";
+import ClosedCaptionIcon from "@mui/icons-material/ClosedCaption";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
+
+import "./courseStyle.css";
+
+function Courses() {
+
     const { id } = useParams();
-    const navigate = useNavigate();
     const { state } = useLocation();
+    // console.log("Sta: ", state);
+    const navigate = useNavigate();
 
     const image = state?.image || "/Images/img1.jpeg";
-    const price = state?.price || 0;
-    const [course, setCourse] = useState(null);
+    // const price = state?.price || 0;
     const [loading, setLoading] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [buyLoading, setBuyLoading] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
+    // const [buyLoading, setBuyLoading] = useState(false);
+
+    const [course, setCourse] = useState({});
+    // const [purchasedCourses, setPurchasedCourses] = useState([]);
+    const [isPurchased, setIsPurchased] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         fetchCourseDetails();
@@ -22,7 +53,7 @@ const CourseDetail = () => {
             setLoading(true);
             const token = localStorage.getItem("token");
 
-            const res = await fetch(
+            const res = await axios.get(
                 `http://localhost:3000/api/v1/user/list/${id}`,
                 {
                     headers: {
@@ -31,12 +62,12 @@ const CourseDetail = () => {
                 }
             );
 
-            const data = await res.json();
-            if (data?.list?.length > 0) {
-                setCourse(data.list[0]);
-                console.log(data.list[0]);
+            console.log("API DATA:", res.data);
 
+            if (res.data?.list?.length > 0) {
+                setCourse(res.data.list[0]);
             }
+
         } catch (err) {
             console.log(err);
         } finally {
@@ -44,7 +75,10 @@ const CourseDetail = () => {
         }
     };
 
-    const handleBuy = async () => {
+
+
+
+    const handleBuyNow = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
             navigate("/signin");
@@ -52,140 +86,201 @@ const CourseDetail = () => {
         }
 
         try {
-            setBuyLoading(true);
-            await fetch("http://localhost:3000/api/v1/user/purchase", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ courseId: id }),
-            });
+            setLoading(true);
 
-            navigate("/Purchase", {
-                state: {
-                    image,
-                    price,
-                },
-            });
+            const res = await axios.post(
+                "http://localhost:3000/api/v1/user/purchase",
+                { courseId: id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (res.data.success) {
+                toast.success("Course Purchased Successfully");
+                setIsPurchased(true);
+            }
         } catch (err) {
-            console.log(err);
+            toast.error("Purchase failed");
         } finally {
-            setBuyLoading(false);
-            setShowModal(false);
+            setLoading(false);
         }
     };
 
-    if (loading || !course) {
-        return <p className="text-white text-center mt-10">Loading...</p>;
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "300px",
+                }}
+            >
+                <CircularProgress color="secondary" />
+            </div>
+        );
     }
+    if (!course) return null;
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white px-6 py-10 sm:mt-18 mt-16">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 gap-10">
-
-                <img
-                    src={image}
-                    alt="Course"
-                    className="rounded shadow-lg hover:scale-104 duration-200"
-                />
+        <div className="single-course" >
+            <div className="text-container">
+                <div>
+                    <img
+                        src={image}
+                        alt="Course"
+                        width={"200px"}
+                        style={{ borderRadius: "20px" }}
+                    />
+                </div>
+                <div>
+                    <h5 style={{ color: "white", fontSize: "25px" }}>{course?.title}</h5>
+                </div>
 
                 <div>
-                    <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
-                    <p className="text-2xl font-semibold mb-6">
-                        Price: ₹{price}
+                    <p style={{ color: "white", fontSize: "10px", fontStyle: "italic" }}>
+                        {course?.description}
                     </p>
+                </div>
 
-                    <h2 className="text-2xl font-bold mt-6">Course Overview</h2>
-                    <p className="text-gray-300 mb-6">{course.description}</p>
-
-
-                    <div className="mt-8">
-                        <h2 className="text-2xl font-bold mb-3">What you will learn</h2>
-                        <ul className="list-disc pl-6 text-gray-300 space-y-2">
-                            {course.learnings?.map((item, index) => (
-                                <li key={index}>{item}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="mt-8">
-                        <h2 className="text-2xl font-bold mb-3">Course Features</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {course.features?.map((feature, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-gray-800 px-4 py-2 rounded"
-                                >
-                                    {feature}
-                                </div>
-                            ))}
+                <div>
+                    {!isPurchased ? (
+                        <button
+                            className="button-btn"
+                            style={{ width: "180px" }}
+                            onClick={handleBuyNow}
+                        >
+                            BUY NOW @${course?.price}
+                        </button>
+                    ) : (
+                        <div>
+                            <button
+                                style={{
+                                    backgroundColor: "green",
+                                    padding: "10px 20px",
+                                    fontWeight: "700",
+                                    fontSize: "15px !important",
+                                    borderRadius: "50px",
+                                    color: "white",
+                                    borderWidth: "0px"
+                                }}
+                            >
+                                Purchased
+                            </button>
+                            <button
+                                style={{
+                                    backgroundColor: "#1E267A",
+                                    padding: "10px 20px",
+                                    fontWeight: "700",
+                                    fontSize: "15px !important",
+                                    borderRadius: "50px",
+                                    color: "white",
+                                    borderWidth: "0px",
+                                    marginLeft: "20px",
+                                }}
+                            >
+                                View Content
+                            </button>
                         </div>
-                    </div>
-
-                    <div className="mt-8 bg-gray-800 rounded-lg p-5">
-                        <h2 className="text-2xl font-bold mb-4">Course Details</h2>
-
-                        <div className="space-y-2 text-gray-300">
-                            <p><span className="font-semibold text-white">Duration:</span> {course.details?.duration}</p>
-                            <p><span className="font-semibold text-white">Level:</span> {course.details?.level}</p>
-                            <p><span className="font-semibold text-white">Language:</span> {course.details?.language}</p>
-                            <p><span className="font-semibold text-white">Projects:</span> {course.details?.projects}</p>
-                        </div>
-                    </div>
-
-                    <div className="mt-8">
-                        <h2 className="text-2xl font-bold mb-3">Who Can Join</h2>
-                        <ul className="list-disc pl-6 text-gray-300 space-y-2">
-                            {course.whoCanJoin?.map((person, index) => (
-                                <li key={index}>{person}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <button
-                        onClick={() => setShowModal(true)}
-                        className="py-3 px-8 bg-blue-600 rounded font-bold hover:bg-blue-800 transition cursor-pointer mt-8 w-full"
-                    >
-                        Buy Now
-                    </button>
+                    )}
                 </div>
             </div>
-
-            {showModal && (
-                <div
-                    onClick={() => setShowModal(false)}
-                    className="fixed inset-0 bg-opacity-60 flex justify-center items-center"
+            <div>
+                <Card
+                    className="cardstyle"
+                    variant="outlined"
+                    sx={{ width: "350px", height: "440px" }}
+                    style={{
+                        backgroundColor: "#601b99",
+                        color: "white",
+                        borderRadius: "10px",
+                        display: "flex",
+                        padding: "5px",
+                    }}
                 >
-                    <div
-                        onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-xl p-6 w-80 text-center"
-                    >
-                        <h2 className="text-xl font-semibold mb-4 text-black">
-                            Are you sure you want to buy this course?
-                        </h2>
-
-                        <div className="flex justify-center gap-5 mt-4">
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="px-6 py-2 rounded-xl border border-gray-400 text-gray-700 hover:bg-red-50"
+                    <CardActionArea>
+                        <CardContent style={{ textAlign: "center" }}>
+                            <Typography gutterBottom variant="h6" component="div" >
+                                Course Overview
+                            </Typography>
+                            <br />
+                            <Box
+                                sx={{
+                                    bgcolor: "background.paper",
+                                    color: "black",
+                                    borderRadius: "20px",
+                                    padding: "5px 2px",
+                                }}
                             >
-                                No
-                            </button>
-
-                            <button
-                                onClick={handleBuy}
-                                disabled={buyLoading}
-                                className="px-6 py-2 rounded-xl bg-green-600 text-white hover:bg-green-700"
-                            >
-                                {buyLoading ? "Processing..." : "Yes"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                                <nav aria-label="main mailbox folders">
+                                    <List style={{ padding: "5px" }}>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <SignalCellularAltIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Beginner to Pro" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <OndemandVideoIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="20+ Hours of HD video" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <FormatListBulletedIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="150+ Lessons" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <DownloadIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Downloadable content" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <ClosedCaptionIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="English captions" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <MilitaryTechIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Certificate of completion" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem disablePadding>
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <AllInclusiveIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Lifetime access" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    </List>
+                                </nav>
+                            </Box>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </div>
         </div>
     );
-};
+}
 
-export default CourseDetail;
+export default Courses;

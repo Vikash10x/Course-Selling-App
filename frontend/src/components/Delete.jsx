@@ -41,7 +41,7 @@ const Delete = ({ id, setCourses }) => {
 
             {showModal && (
                 <div className="fixed inset-0 bg-opacity-60 flex justify-center items-center">
-                    <div className="bg-white rounded-xl p-6 w-80 text-center">
+                    <div className="bg-[#efefef] rounded-xl p-6 w-80 text-center">
                         <h2 className="text-xl font-semibold mb-4 text-black">
                             Are you sure you want to delete this course?
                         </h2>
