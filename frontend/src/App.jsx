@@ -7,25 +7,38 @@ import Course from './components/Course';
 import Navbar from './components/Navbar';
 import Purchase from './components/Purchase';
 import AddCourse from './components/AddCourse';
-// import { List } from 'lucide-react';
 import List from './components/List';
-import Buy from './components/Buy';
 import Footer from './components/Footer';
+import LandingPage from './components/LandingPage';
+// import bg from '../public/Images/bg.svg';
 
 
 function App() {
   return (
-    <div className='bg-gray-700 h-screen'>
+    <div
+      style={{
+        backgroundImage: "url(/Images/bg.svg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        width: "100%",
+        backgroundColor: "black",
+        overflow: "hidden",
+      }}
+    >
+
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Course />} />
+        <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/" element={<Course />} /> */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/course" element={<Course />} />
+        {/* <Route path="/AddCourse" element={<AddCourse />} /> */}
         <Route path="/purchase" element={<Purchase />} />
         <Route path="/course/:id" element={<List />} />
-        <Route path="/buy" element={<Buy />} />
       </Routes>
 
       {/* <Footer /> */}
