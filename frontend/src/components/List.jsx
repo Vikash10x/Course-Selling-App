@@ -15,6 +15,8 @@ import {
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../config";
+
 
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
@@ -54,7 +56,8 @@ function Courses() {
             const token = localStorage.getItem("token");
 
             const res = await axios.get(
-                `http://localhost:3000/api/v1/user/list/${id}`,
+                `${API_BASE_URL}/user/list/${id}`,
+
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -89,7 +92,8 @@ function Courses() {
             setLoading(true);
 
             const res = await axios.post(
-                "http://localhost:3000/api/v1/user/purchase",
+                `${API_BASE_URL}/user/purchase`,
+
                 { courseId: id },
                 {
                     headers: {

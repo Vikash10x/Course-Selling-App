@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "../index.css";
+import { API_BASE_URL } from "../config";
+
 
 const AddCourse = () => {
     const [open, setOpen] = useState(false);
@@ -17,7 +19,8 @@ const AddCourse = () => {
         try {
             const token = localStorage.getItem("token");
 
-            const res = await fetch("http://localhost:3000/api/v1/admin/course", {
+            const res = await fetch(`${API_BASE_URL}/admin/course`, {
+
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
+
 
 const Delete = ({ id, setCourses }) => {
     const [showModal, setShowModal] = useState(false);
@@ -15,7 +17,8 @@ const Delete = ({ id, setCourses }) => {
         }
 
         const res = await fetch(
-            `http://localhost:3000/api/v1/admin/delete/${id}`,
+            `${API_BASE_URL}/admin/delete/${id}`,
+
             {
                 method: "DELETE",
                 headers: {

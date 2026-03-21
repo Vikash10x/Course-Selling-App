@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Delete from "./Delete";
 import Buy from "./Buy";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
+
 
 const courseImages = [
     "/Images/img1.jpg",
@@ -19,7 +21,8 @@ const Course = () => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await fetch("http://localhost:3000/api/v1/admin/course", {
+                const res = await fetch(`${API_BASE_URL}/admin/course`, {
+
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

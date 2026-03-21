@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { API_BASE_URL } from "../config";
+
 
 const courseImages = [
     "/Images/img1.jpg",
@@ -19,7 +21,8 @@ const Purchase = () => {
             try {
                 const token = localStorage.getItem("token");
                 const res = await axios.get(
-                    "http://localhost:3000/api/v1/user/my-course",
+                    `${API_BASE_URL}/user/my-course`,
+
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

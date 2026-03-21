@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
+import { API_BASE_URL } from "../config";
+
 
 const Signup = () => {
     const [formdata, setFormdata] = useState({ name: "", email: "", password: "" });
@@ -19,7 +21,8 @@ const Signup = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch("http://localhost:3000/api/v1/user/signup", {
+        fetch(`${API_BASE_URL}/user/signup`, {
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formdata),
