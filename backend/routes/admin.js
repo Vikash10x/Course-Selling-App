@@ -9,7 +9,7 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
     try {
         const adminId = req.user.id;
 
-        const { title, description, price, images } = req.body;
+        const { title, description, price, imageLink } = req.body;
 
         if (!title || !description) {
             return res.status(400).json({
@@ -20,6 +20,8 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
         const course = await courseModel.create({
             title,
             description,
+            price,
+            imageLink,
             creatorId: adminId,
         });
 

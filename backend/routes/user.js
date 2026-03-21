@@ -2,7 +2,7 @@ const { Router } = require("express");
 const mongoose = require("mongoose");
 
 const userRouter = Router();
-const { userModel, purchaseModel, listModel } = require("../db");
+const { userModel, purchaseModel, listModel, courseModel } = require("../db");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware/auth");
 const { JWT_SECRET } = require("../config");
@@ -101,9 +101,10 @@ userRouter.get("/list/:id", authMiddleware, async function (req, res) {
     const courseId = req.params.id;
 
     try {
-        const list = await listModel.find({ courseId });
+        const course = await courseModel.findById(courseId);
+        const list = course ? [course] : [];
 
-        console.log("Fetched List:", list);
+        console.log("Fetched Course Details:", list);
 
         res.json({
             success: true,
