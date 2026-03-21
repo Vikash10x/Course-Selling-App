@@ -33,7 +33,7 @@ function Courses() {
     // console.log("Sta: ", state);
     const navigate = useNavigate();
 
-    const image = state?.image || "/Images/img1.jpeg";
+    const image = state?.image;
     // const price = state?.price || 0;
     const [loading, setLoading] = useState(false);
     // const [showModal, setShowModal] = useState(false);

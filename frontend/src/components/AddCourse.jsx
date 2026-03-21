@@ -10,6 +10,7 @@ const AddCourse = () => {
         title: "",
         description: "",
         price: "",
+        imageLink: "",
     });
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +29,7 @@ const AddCourse = () => {
             const data = await res.json();
             console.log(data);
 
-            setNewCourse({ title: "", description: "", price: "" });
+            setNewCourse({ title: "", description: "", price: "", imageLink: "" });
             setOpen(false);
         } catch (err) {
             console.log("Error:", err);
@@ -92,7 +93,7 @@ const AddCourse = () => {
                                 required
                             />
 
-                            {/* <input
+                            <input
                                 type="number"
                                 value={newCourse.price}
                                 onChange={(e) =>
@@ -101,7 +102,18 @@ const AddCourse = () => {
                                 placeholder="Price"
                                 className="border p-2 rounded w-full mb-3"
                                 required
-                            /> */}
+                            />
+
+                            <input
+                                type="text"
+                                value={newCourse.imageLink}
+                                onChange={(e) =>
+                                    setNewCourse({ ...newCourse, imageLink: e.target.value })
+                                }
+                                placeholder="Image Link"
+                                className="border p-2 rounded w-full mb-3"
+                                required
+                            />
 
                             <div className="flex justify-end gap-3 mt-3">
                                 <button

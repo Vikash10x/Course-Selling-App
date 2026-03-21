@@ -17,7 +17,7 @@ function LandingPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2">
 
                     <div>
-                        <div className="mt-20">
+                        <div className="mt-20 p-20 disabled:not-only: ">
 
                             <motion.div
                                 initial={{ opacity: 0, x: -50 }}
