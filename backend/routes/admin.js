@@ -89,6 +89,38 @@ adminRouter.delete("/delete/:id", authMiddleware, async function (req, res) {
     }
 });
 
+adminRouter.put("/update/:id", authMiddleware, async function (req, res) {
+    try {
+        const courseId = req.params.id;
+        const { title, description, price, imageLink } = req.body;
+
+        const course = await courseModel.findByIdAndUpdate(
+            courseId,
+            { title, description, price, imageLink },
+            { new: true }
+        );
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Course updated successfully",
+            course
+        });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: e.message
+        });
+    }
+});
+
 module.exports = {
     adminRouter: adminRouter
 }
