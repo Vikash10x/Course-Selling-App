@@ -6,7 +6,7 @@ import {
     CardActionArea,
     CircularProgress,
     Typography,
-    List,
+    List as MUIList,
     ListItem,
     ListItemButton,
     ListItemIcon,
@@ -16,7 +16,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "../config";
-
+import { motion } from "framer-motion";
 
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
@@ -28,23 +28,28 @@ import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 
 import "./courseStyle.css";
 
+const fallbackImages = [
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1964&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2069&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1974&auto=format&fit=crop",
+];
+
+
 function Courses() {
 
     const { id } = useParams();
     const { state } = useLocation();
-    // console.log("Sta: ", state);
     const navigate = useNavigate();
 
-    const image = state?.image;
-    // const price = state?.price || 0;
-    const [loading, setLoading] = useState(false);
-    // const [showModal, setShowModal] = useState(false);
-    // const [buyLoading, setBuyLoading] = useState(false);
-
     const [course, setCourse] = useState({});
-    // const [purchasedCourses, setPurchasedCourses] = useState([]);
+
+    // Prioritize API image, then state image, then fallback
+    const imageToDisplay = course?.imageLink || state?.image || fallbackImages[0];
+
+    const [loading, setLoading] = useState(false);
     const [isPurchased, setIsPurchased] = useState(false);
-    // const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         fetchCourseDetails();
@@ -57,7 +62,6 @@ function Courses() {
 
             const res = await axios.get(
                 `${API_BASE_URL}/user/list/${id}`,
-
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -79,8 +83,6 @@ function Courses() {
     };
 
 
-
-
     const handleBuyNow = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -93,7 +95,6 @@ function Courses() {
 
             const res = await axios.post(
                 `${API_BASE_URL}/user/purchase`,
-
                 { courseId: id },
                 {
                     headers: {
@@ -115,174 +116,127 @@ function Courses() {
 
     if (loading) {
         return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: "300px",
-                }}
-            >
-                <CircularProgress color="secondary" />
+            <div className="flex justify-center items-center min-vh-100 mt-40">
+                <CircularProgress style={{ color: "#b388ff" }} />
             </div>
         );
     }
     if (!course) return null;
 
     return (
-        <div className="single-course" >
-            <div className="text-container">
-                <div>
-                    <img
-                        src={image}
-                        alt="Course"
-                        width={"200px"}
-                        style={{ borderRadius: "20px" }}
-                    />
-                </div>
-                <div>
-                    <h5 style={{ color: "white", fontSize: "25px" }}>{course?.title}</h5>
-                </div>
+        <div className="max-w-7xl mx-auto px-4 py-20 min-h-screen">
+            <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="flex flex-col lg:flex-row gap-12 mt-10"
+            >
+                {/* Main Content */}
+                <div className="flex-1 space-y-8 glass-panel p-8 rounded-3xl">
+                    <div className="course-image-container relative rounded-2xl overflow-hidden h-80 shadow-2xl">
+                        <img
+                            src={imageToDisplay}
+                            alt="Course"
+                            className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                    </div>
 
-                <div>
-                    <p style={{ color: "white", fontSize: "10px", fontStyle: "italic" }}>
-                        {course?.description}
-                    </p>
-                </div>
+                    <div className="space-y-4">
+                        <h1 className="text-4xl md:text-5xl font-extrabold premium-heading leading-tight">
+                            {course?.title || state?.title}
+                        </h1>
+                        <p className="text-gray-300 text-lg leading-relaxed">
+                            {course?.description || state?.description}
+                        </p>
+                    </div>
 
-                <div>
-                    {!isPurchased ? (
-                        <button
-                            className="button-btn"
-                            style={{ width: "180px" }}
-                            onClick={handleBuyNow}
-                        >
-                            BUY NOW @${course?.price}
-                        </button>
-                    ) : (
-                        <div>
-                            <button
-                                style={{
-                                    backgroundColor: "green",
-                                    padding: "10px 20px",
-                                    fontWeight: "700",
-                                    fontSize: "15px !important",
-                                    borderRadius: "50px",
-                                    color: "white",
-                                    borderWidth: "0px"
-                                }}
-                            >
-                                Purchased
-                            </button>
-                            <button
-                                style={{
-                                    backgroundColor: "#1E267A",
-                                    padding: "10px 20px",
-                                    fontWeight: "700",
-                                    fontSize: "15px !important",
-                                    borderRadius: "50px",
-                                    color: "white",
-                                    borderWidth: "0px",
-                                    marginLeft: "20px",
-                                }}
-                            >
-                                View Content
-                            </button>
+                    {localStorage.getItem("role") !== "admin" && (
+                        <div className="pt-6">
+                            {!isPurchased ? (
+                                <button
+                                    className="btn-premium w-full md:w-auto px-12 py-4 text-xl shadow-[0_0_30px_rgba(96,27,153,0.4)]"
+                                    onClick={handleBuyNow}
+                                >
+                                    Enroll Now for ${course?.price || state?.price}
+                                </button>
+                            ) : (
+                                <div className="flex gap-4">
+                                    <button className="px-8 py-4 rounded-xl bg-green-500/10 text-green-400 border border-green-500/20 font-bold">
+                                        ✓ Enrolled
+                                    </button>
+                                    <button className="btn-premium px-8 py-4">
+                                        Start Learning
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
-            </div>
-            <div>
-                <Card
-                    className="cardstyle"
-                    variant="outlined"
-                    sx={{ width: "350px", height: "440px" }}
-                    style={{
-                        backgroundColor: "#601b99",
-                        color: "white",
-                        borderRadius: "10px",
-                        display: "flex",
-                        padding: "5px",
-                    }}
+
+                {/* Sidebar */}
+                <motion.div 
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                    className="w-full lg:w-[400px]"
                 >
-                    <CardActionArea>
-                        <CardContent style={{ textAlign: "center" }}>
-                            <Typography gutterBottom variant="h6" component="div" >
-                                Course Overview
-                            </Typography>
-                            <br />
-                            <Box
-                                sx={{
-                                    bgcolor: "background.paper",
-                                    color: "black",
-                                    borderRadius: "20px",
-                                    padding: "5px 2px",
-                                }}
-                            >
-                                <nav aria-label="main mailbox folders">
-                                    <List style={{ padding: "5px" }}>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <SignalCellularAltIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Beginner to Pro" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <OndemandVideoIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="20+ Hours of HD video" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <FormatListBulletedIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="150+ Lessons" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <DownloadIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Downloadable content" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <ClosedCaptionIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="English captions" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <MilitaryTechIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Certificate of completion" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                        <ListItem disablePadding>
-                                            <ListItemButton>
-                                                <ListItemIcon>
-                                                    <AllInclusiveIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Lifetime access" />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    </List>
-                                </nav>
-                            </Box>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            </div>
+                    <div className="glass-panel rounded-3xl overflow-hidden sticky top-24">
+                        <div className="bg-gradient-to-r from-purple-900/40 to-indigo-900/40 p-6 border-b border-white/5">
+                            <h3 className="text-2xl font-bold text-white text-center">
+                                Course Features
+                            </h3>
+                        </div>
+                        
+                        <div className="p-4">
+                            <MUIList sx={{ '& .MuiListItemIcon-root': { color: '#b388ff', minWidth: '40px' }, '& .MuiTypography-root': { color: '#e2e8f0', fontWeight: 500 } }}>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors">
+                                        <ListItemIcon><SignalCellularAltIcon /></ListItemIcon>
+                                        <ListItemText primary="Beginner to Pro Level" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors mt-1">
+                                        <ListItemIcon><OndemandVideoIcon /></ListItemIcon>
+                                        <ListItemText primary="20+ Hours of HD video" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors mt-1">
+                                        <ListItemIcon><FormatListBulletedIcon /></ListItemIcon>
+                                        <ListItemText primary="150+ Interactive Lessons" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors mt-1">
+                                        <ListItemIcon><DownloadIcon /></ListItemIcon>
+                                        <ListItemText primary="Downloadable resources" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors mt-1">
+                                        <ListItemIcon><ClosedCaptionIcon /></ListItemIcon>
+                                        <ListItemText primary="English Captions" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors mt-1">
+                                        <ListItemIcon><MilitaryTechIcon /></ListItemIcon>
+                                        <ListItemText primary="Certificate of Completion" />
+                                    </ListItemButton>
+                                </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemButton className="hover:bg-white/5 rounded-xl transition-colors mt-1">
+                                        <ListItemIcon><AllInclusiveIcon /></ListItemIcon>
+                                        <ListItemText primary="Full Lifetime Access" />
+                                    </ListItemButton>
+                                </ListItem>
+                            </MUIList>
+                        </div>
+                    </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 }

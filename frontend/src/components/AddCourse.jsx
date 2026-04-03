@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import "../index.css";
 import { API_BASE_URL } from "../config";
-
 
 const AddCourse = () => {
     const [open, setOpen] = useState(false);
@@ -14,13 +14,13 @@ const AddCourse = () => {
         price: "",
         imageLink: "",
     });
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem("token");
 
             const res = await fetch(`${API_BASE_URL}/admin/course`, {
-
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -32,8 +32,13 @@ const AddCourse = () => {
             const data = await res.json();
             console.log(data);
 
-            setNewCourse({ title: "", description: "", price: "", imageLink: "" });
-            setOpen(false);
+            if (res.ok) {
+                alert("Course added successfully!");
+                setNewCourse({ title: "", description: "", price: "", imageLink: "" });
+                setOpen(false);
+            } else {
+                alert(data.message || "Failed to add course");
+            }
         } catch (err) {
             console.log("Error:", err);
             alert("Something went wrong!");
@@ -58,15 +63,15 @@ const AddCourse = () => {
                 </button>
             )}
 
-
-            {open && (
+            {open && createPortal(
                 <div
                     id="overlay"
                     onClick={handleOverlayClick}
-                    className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50"
+                    className="fixed inset-0 flex justify-center items-center z-[9999]"
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
                 >
                     <div
-                        className="bg-[#efefef] p-6 rounded-2xl shadow-lg w-90 sm:w-96"
+                        className="bg-white p-6 rounded-2xl shadow-lg w-96"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-xl font-semibold mb-4 text-center text-black">
@@ -81,7 +86,7 @@ const AddCourse = () => {
                                     setNewCourse({ ...newCourse, title: e.target.value })
                                 }
                                 placeholder="Course Name"
-                                className="border p-2 rounded w-full mb-3"
+                                className="border p-2 rounded w-full mb-3 text-black"
                                 required
                             />
 
@@ -92,7 +97,7 @@ const AddCourse = () => {
                                     setNewCourse({ ...newCourse, description: e.target.value })
                                 }
                                 placeholder="Description"
-                                className="border p-2 rounded w-full mb-3"
+                                className="border p-2 rounded w-full mb-3 text-black"
                                 required
                             />
 
@@ -103,7 +108,7 @@ const AddCourse = () => {
                                     setNewCourse({ ...newCourse, price: e.target.value })
                                 }
                                 placeholder="Price"
-                                className="border p-2 rounded w-full mb-3"
+                                className="border p-2 rounded w-full mb-3 text-black"
                                 required
                             />
 
@@ -114,7 +119,7 @@ const AddCourse = () => {
                                     setNewCourse({ ...newCourse, imageLink: e.target.value })
                                 }
                                 placeholder="Image Link"
-                                className="border p-2 rounded w-full mb-3"
+                                className="border p-2 rounded w-full mb-3 text-black"
                                 required
                             />
 
@@ -122,21 +127,22 @@ const AddCourse = () => {
                                 <button
                                     type="button"
                                     onClick={() => setOpen(false)}
-                                    className="px-5 py-2 rounded-xl border border-red-400 text-red-600 cursor-pointer"
+                                    className="px-5 py-2 rounded-xl border border-red-400 text-red-600 cursor-pointer hover:bg-red-50"
                                 >
                                     Cancel
                                 </button>
 
                                 <button
                                     type="submit"
-                                    className="px-5 py-2 rounded-xl bg-green-600 text-white cursor-pointer"
+                                    className="px-5 py-2 rounded-xl bg-green-600 text-white cursor-pointer hover:bg-green-700"
                                 >
                                     Submit
                                 </button>
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

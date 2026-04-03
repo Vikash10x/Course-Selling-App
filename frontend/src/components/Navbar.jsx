@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import AddCourse from "./AddCourse";
+import { motion } from "framer-motion";
 
 export default function Appbar() {
     const token = localStorage.getItem("token");
@@ -16,57 +17,42 @@ export default function Appbar() {
     const navigate = useNavigate();
 
     return (
-        <>
+        <motion.nav 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="fixed top-0 left-0 right-0 z-50 glass-panel border-t-0 border-x-0 border-b border-white/10 px-4 md:px-8 py-3"
+        >
             {token && (
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        itemsAlign: "center",
-                        padding: 10,
-                        zIndex: 1,
-                        // marginTop: "8px",
-                    }}
-                >
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginLeft: 10,
-                            cursor: "pointer",
-                        }}
+                        className="flex items-center cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => navigate("/")}
                     >
-                        <Typography
-                            style={{ color: "white", fontFamily: "Kaushan Script" }}
-                            variant="h6"
-                        >
+                        <h2 className="text-2xl font-bold premium-heading" style={{ fontFamily: "Kaushan Script" }}>
                             CourseHub
-                        </Typography>
+                        </h2>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
+                    <div className="flex items-center gap-3">
                         <button
-                            className="button-nav"
-                            style={{ width: "100px", marginLeft: 10 }}
+                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors"
                             onClick={() => navigate("/course")}
                         >
-                            All courses
+                            All Courses
                         </button>
 
                         <AddCourse />
 
                         <button
-                            className="button-nav"
-                            style={{ width: "100px", marginLeft: 10 }}
+                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors"
                             onClick={() => navigate("/purchase")}
                         >
                             My Courses
                         </button>
 
                         <button
-                            className="button-btn"
-                            style={{ width: "90px", height: "35px", marginLeft: 10 }}
+                            className="px-5 py-2 rounded-xl bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors border border-red-500/20"
                             onClick={() => {
                                 localStorage.clear();
                                 setUser({
@@ -82,14 +68,15 @@ export default function Appbar() {
                         </button>
 
                         <Tooltip title={userEmail}>
-                            <IconButton>
+                            <IconButton className="ml-2">
                                 <Avatar
                                     sx={{
-                                        bgcolor: "whitesmoke",
-                                        color: "purple",
-                                        width: 35,
-                                        height: 35,
-                                        ml: 1,
+                                        background: "linear-gradient(135deg, #601b99 0%, #3f1066 100%)",
+                                        color: "white",
+                                        width: 38,
+                                        height: 38,
+                                        fontWeight: "bold",
+                                        boxShadow: "0 4px 10px rgba(96,27,153,0.3)"
                                     }}
                                 >
                                     {userEmail?.[0]?.toUpperCase()}
@@ -101,119 +88,34 @@ export default function Appbar() {
             )}
 
             {!token && (
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: 10,
-                        zIndex: 1,
-                        overflow: "auto",
-                        marginLeft: "20px",
-                        marginRight: "20px",
-                        // marginTop: "8px",
-                        // border: "5px solid #601b99"
-                    }}
-                >
-                    <Typography
-                        style={{
-                            color: "white",
-                            fontFamily: "Kaushan Script",
-                            cursor: "pointer",
-                        }}
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                    <div
+                        className="flex items-center cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => navigate("/")}
-                        variant="h5"
                     >
-                        CourseHub
-                    </Typography>
+                        <h2 className="text-2xl font-bold premium-heading" style={{ fontFamily: "Kaushan Script" }}>
+                            CourseHub
+                        </h2>
+                    </div>
 
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div className="flex items-center gap-4">
                         <button
-                            className="button-nav"
+                            className="px-6 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors hidden sm:block"
                             onClick={() => navigate("/signup")}
                         >
-                            Signup
+                            Sign Up
                         </button>
 
                         <button
-                            className="button-nav"
-                            style={{ marginLeft: 10 }}
+                            className="btn-premium px-6 py-2 shadow-[0_0_15px_rgba(96,27,153,0.3)]"
                             onClick={() => navigate("/signin")}
                         >
-                            Signin
+                            Sign In
                         </button>
                     </div>
                 </div>
             )}
-        </>
+        </motion.nav>
     );
 }
-
-
-
-
-
-
-
-
-
-// import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import AddCourse from "./AddCourse";
-
-// const Navbar = () => {
-//     const navigate = useNavigate();
-//     const token = localStorage.getItem("token");
-//     const [open, setOpen] = useState(false);
-
-//     const handleLogout = () => {
-//         localStorage.removeItem("token");
-//         navigate("/");
-//         setOpen(false);
-//     };
-
-//     return (
-//         <nav className="bg-[#101828] text-white px-5 py-4 fixed top-0 left-0 w-full z-50">
-//             <div className="flex justify-between items-center">
-
-//                 <h1 className="text-2xl font-bold">Course Selling App</h1>
-
-//                 <button
-//                     className="md:hidden text-2xl text-white focus:outline-none "
-//                     onClick={() => setOpen(!open)}
-//                 >
-//                     {open ? "✖" : "☰"}
-//                 </button>
-
-//                 <div className="hidden md:flex items-center">
-//                     {!token && (
-//                         <>
-//                             <Link to="/signup" className="mr-5">
-//                                 <button className="button-btn">Signup</button>
-//                             </Link>
-//                             <Link to="/signin">
-//                                 <button className="button-btn">Signin</button>
-//                             </Link>
-//                         </>
-//                     )}
-
-//                     {token && (
-//                         <>
-//                             <Link to="/course">
-//                                 <button className="button-btn mr-3">All Courses</button>
-//                             </Link>
-//                             <AddCourse />
-//                             <Link to="/purchase">
-//                                 <button className="button-btn mr-3">My Courses</button>
-//                             </Link>
-//                             <button className="button-btn" onClick={handleLogout}>
-//                                 Logout
-//                             </button>
-//                         </>
-//                     )}
-//                 </div>
-//             </div>
-
-//         </nav>
-//     );
-// };
 

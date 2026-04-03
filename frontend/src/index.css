@@ -163,3 +163,156 @@ body {
   cursor: pointer;
   box-shadow: none;
 }
+
+/* Premium UI Styles */
+:root {
+  --primary-purple: #601b99;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glow-purple: rgba(96, 27, 153, 0.3);
+}
+
+body {
+  background: radial-gradient(circle at top right, #1a1a2e, #0f0f1a);
+  color: white;
+}
+
+.course-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.course-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: var(--primary-purple);
+  box-shadow: 0 15px 35px var(--glow-purple);
+}
+
+.course-image-container {
+  overflow: hidden;
+  height: 200px;
+  position: relative;
+}
+
+.course-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.course-card:hover .course-image {
+  transform: scale(1.1);
+}
+
+.price-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-purple);
+  padding: 5px 15px;
+  border-radius: 30px;
+  font-weight: 700;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+.course-content {
+  padding: 20px;
+}
+
+.course-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  background: linear-gradient(45deg, #fff, #b388ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.course-description {
+  color: #a0aec0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* Premium Buttons */
+.btn-premium {
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #601b99 0%, #3f1066 100%);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(96, 27, 153, 0.4);
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(96, 27, 153, 0.6);
+}
+
+.btn-delete {
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+  font-weight: 600;
+  border: 1px solid rgba(255, 59, 48, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+  background: #ff3b30;
+  color: white;
+}
+
+/* Premium Form Styles */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  transition: all 0.3s ease;
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.glass-input:focus {
+  outline: none !important;
+  border-color: var(--primary-purple) !important;
+  box-shadow: 0 0 15px rgba(96, 27, 153, 0.5) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.premium-heading {
+  background: linear-gradient(135deg, #fff 0%, #b388ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(179, 136, 255, 0.3);
+}
+
+.auth-container {
+  background-image: radial-gradient(circle at 50% 0%, rgba(96, 27, 153, 0.15) 0%, transparent 70%);
+}
