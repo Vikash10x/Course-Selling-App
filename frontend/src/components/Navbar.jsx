@@ -11,19 +11,21 @@ import AddCourse from "./AddCourse";
 import { motion } from "framer-motion";
 
 export default function Appbar() {
-    const token = localStorage.getItem("token");
     const [user, setUser] = useRecoilState(userState);
     const userEmail = useRecoilValue(userEmailState);
     const navigate = useNavigate();
 
+    // Use Recoil state for reactivity — localStorage alone won't cause re-render
+    const isLoggedIn = user.isLoggedIn || !!localStorage.getItem("token");
+
     return (
-        <motion.nav 
+        <motion.nav
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
             className="fixed top-0 left-0 right-0 z-50 glass-panel border-t-0 border-x-0 border-b border-white/10 px-4 md:px-8 py-3"
         >
-            {token && (
+            {isLoggedIn && (
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div
                         className="flex items-center cursor-pointer hover:scale-105 transition-transform"
@@ -36,7 +38,7 @@ export default function Appbar() {
 
                     <div className="flex items-center gap-3">
                         <button
-                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors"
+                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors cursor-pointer"
                             onClick={() => navigate("/course")}
                         >
                             All Courses
@@ -45,14 +47,14 @@ export default function Appbar() {
                         <AddCourse />
 
                         <button
-                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors"
+                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors cursor-pointer"
                             onClick={() => navigate("/purchase")}
                         >
                             My Courses
                         </button>
 
                         <button
-                            className="px-5 py-2 rounded-xl bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors border border-red-500/20"
+                            className="px-5 py-2 rounded-xl bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors border border-red-500/20 cursor-pointer"
                             onClick={() => {
                                 localStorage.clear();
                                 setUser({
@@ -87,7 +89,7 @@ export default function Appbar() {
                 </div>
             )}
 
-            {!token && (
+            {!isLoggedIn && (
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div
                         className="flex items-center cursor-pointer hover:scale-105 transition-transform"
@@ -100,14 +102,14 @@ export default function Appbar() {
 
                     <div className="flex items-center gap-4">
                         <button
-                            className="px-6 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors hidden sm:block"
+                            className="px-6 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors hidden sm:block cursor-pointer"
                             onClick={() => navigate("/signup")}
                         >
                             Sign Up
                         </button>
 
                         <button
-                            className="btn-premium px-6 py-2 shadow-[0_0_15px_rgba(96,27,153,0.3)]"
+                            className="btn-premium px-6 py-2 shadow-[0_0_15px_rgba(96,27,153,0.3)] cursor-pointer"
                             onClick={() => navigate("/signin")}
                         >
                             Sign In

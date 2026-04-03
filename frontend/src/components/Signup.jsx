@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
 import { API_BASE_URL } from "../config";
 import { motion } from "framer-motion";
+import { useRecoilState } from "recoil";
+import { userState } from "../store/atoms/user";
 
 const Signup = () => {
     const [formdata, setFormdata] = useState({ name: "", email: "", password: "" });
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [showPass, setShowPass] = useState(false);
+    const [user, setUser] = useRecoilState(userState);
 
     const handleChange = (e) => {
         setFormdata({
@@ -30,10 +33,17 @@ const Signup = () => {
             .then(data => {
                 if (data.token) {
                     localStorage.setItem("token", data.token);
+                    localStorage.setItem("isLoggedIn", "true");
 
                     if (data.role) {
                         localStorage.setItem("role", data.role);
                     }
+
+                    setUser({
+                        Email: formdata.email,
+                        username: formdata.name,
+                        isLoggedIn: true,
+                    });
 
                     setError("");
                     navigate("/course");
