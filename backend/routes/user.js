@@ -24,13 +24,19 @@ userRouter.post("/signup", async function (req, res) {
         email: email,
         password: password,
         role: role || "user"
-    })
+    });
+
+    const token = jwt.sign(
+        { id: user._id, role: user.role },
+        JWT_SECRET,
+        { expiresIn: "2h" }
+    );
 
     res.json({
         message: "SignUp Successful",
-        user
-    })
-
+        token: token,
+        role: user.role
+    });
 
 })
 
