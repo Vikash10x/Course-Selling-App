@@ -2,11 +2,10 @@ const { Router } = require("express");
 const mongoose = require("mongoose");
 
 const userRouter = Router();
-const { userModel, purchaseModel, listModel, courseModel } = require("../db");
+const { userModel, purchaseModel, listModel, courseModel, ratingModel } = require("../db");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware/auth");
 const { JWT_SECRET } = require("../config");
-// const { use } = require("react");
 
 userRouter.post("/signup", async function (req, res) {
     const { name, email, password, role } = req.body;
@@ -126,6 +125,28 @@ userRouter.get("/list/:id", authMiddleware, async function (req, res) {
 });
 
 
+userRouter.get("/profile", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const user = await userModel.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const purchases = await purchaseModel
+            .find({ userId })
+            .populate("courseId");
+
+        res.json({
+            success: true,
+            user,
+            purchases,
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+});
 
 module.exports = {
     userRouter

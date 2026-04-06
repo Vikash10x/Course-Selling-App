@@ -24,6 +24,7 @@ const courseSchema = new Schema({
   description: String,
   price: Number,
   imageLink: String,
+  videoUrl: { type: String, default: "" },
   published: Boolean,
 });
 
@@ -53,16 +54,42 @@ const purchaseSchema = new Schema({
   },
 });
 
+const ratingSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "course",
+    required: true,
+  },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+    required: true,
+  },
+  review: {
+    type: String,
+    default: "",
+  },
+}, { timestamps: true });
 
+// One rating per user per course
+ratingSchema.index({ userId: 1, courseId: 1 }, { unique: true });
 
 const userModel = mongoose.model("user", userSchema);
 const courseModel = mongoose.model("course", courseSchema);
 const purchaseModel = mongoose.model("purchase", purchaseSchema);
 const listModel = mongoose.model("list", listSchema);
+const ratingModel = mongoose.model("rating", ratingSchema);
 
 module.exports = {
   userModel,
   courseModel,
   purchaseModel,
-  listModel
+  listModel,
+  ratingModel,
 };

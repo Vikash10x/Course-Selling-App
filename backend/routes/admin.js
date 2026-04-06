@@ -9,7 +9,7 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
     try {
         const adminId = req.user.id;
 
-        const { title, description, price, imageLink } = req.body;
+        const { title, description, price, imageLink, videoUrl } = req.body;
 
         if (!title || !description) {
             return res.status(400).json({
@@ -22,6 +22,7 @@ adminRouter.post("/course", authMiddleware, async function (req, res) {
             description,
             price,
             imageLink,
+            videoUrl: videoUrl || "",
             creatorId: adminId,
         });
 
@@ -92,11 +93,11 @@ adminRouter.delete("/delete/:id", authMiddleware, async function (req, res) {
 adminRouter.put("/update/:id", authMiddleware, async function (req, res) {
     try {
         const courseId = req.params.id;
-        const { title, description, price, imageLink } = req.body;
+        const { title, description, price, imageLink, videoUrl } = req.body;
 
         const course = await courseModel.findByIdAndUpdate(
             courseId,
-            { title, description, price, imageLink },
+            { title, description, price, imageLink, videoUrl },
             { new: true }
         );
 

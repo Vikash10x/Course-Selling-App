@@ -8,6 +8,7 @@ const courseSchema = new mongoose.Schema({
     description: String,
     price: Number,
     imageLink: String,
+    videoUrl: String,
     published: { type: Boolean, default: true },
 });
 
@@ -16,41 +17,46 @@ const Course = mongoose.models.course || mongoose.model('course', courseSchema);
 
 const courses = [
     {
-        title: "Full-Stack MERN Mastery",
+        title: "Full-Stack MERN Mastery 2024",
         description: "Master React, Node.js, Express, and MongoDB with real-world projects. Build scalable web applications from scratch.",
         price: 499,
         imageLink: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
+        videoUrl: "https://www.youtube.com/watch?v=7CqJlxBYj-M"
     },
     {
-        title: "Python for Data Science",
+        title: "Python for Data Science Bootcamp",
         description: "Learn Python for data analysis, visualization, and machine learning. Includes Pandas, NumPy, and Scikit-Learn.",
         price: 399,
         imageLink: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop",
+        videoUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw"
     },
     {
         title: "Mastering UI/UX with Figma",
         description: "Modern design principles, user psychology, and interactive prototyping in Figma for designers and developers.",
         price: 299,
-        imageLink: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1964&auto=format&fit=crop",
+        imageLink: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1974&auto=format&fit=crop",
+        videoUrl: "https://www.youtube.com/watch?v=3m0TXas0Vjw"
     },
     {
-        title: "DevOps & Cloud Computing",
-        description: "A comprehensive guide to Docker, Kubernetes, CI/CD pipelines, and AWS deployment for senior developers.",
+        title: "DevOps: Docker & Kubernetes Masterclass",
+        description: "A comprehensive guide to Docker, Kubernetes, CI/CD pipelines, and AWS deployment for backend developers.",
         price: 599,
-        imageLink: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2069&auto=format&fit=crop",
+        imageLink: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=2031&auto=format&fit=crop",
+        videoUrl: "https://www.youtube.com/watch?v=hQcFE0RD0cQ"
     },
-
     {
-        title: "Mobile App Dev with Flutter",
-        description: "Build beautiful, high-performance cross-platform apps for iOS and Android using Google's Flutter framework.",
+        title: "Next.js 14 Ultimate Guide",
+        description: "Build production-ready apps using App Router, Server Actions, and advanced performance patterns with Next.js 14.",
         price: 449,
-        imageLink: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1974&auto=format&fit=crop",
+        imageLink: "https://images.unsplash.com/photo-1618477388954-7852f32655ec?q=80&w=1964&auto=format&fit=crop",
+        videoUrl: "https://www.youtube.com/watch?v=wm5gMKuwSYk"
     },
     {
-        title: "The Complete Java Bootcamp",
-        description: "Enterprise-level programming with Java. Algorithms, data structures, and Spring Boot for backend engineering.",
-        price: 349,
-        imageLink: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+        title: "Deep Learning & Neutral Networks",
+        description: "Dive deep into AI with TensorFlow and Keras. Learn to build and train sophisticated deep learning models.",
+        price: 699,
+        imageLink: "https://images.unsplash.com/photo-1507146426996-ef05306b995a?q=80&w=2070&auto=format&fit=crop",
+        videoUrl: "https://www.youtube.com/watch?v=6M5VXapfT20"
     }
 ];
 
@@ -67,7 +73,7 @@ async function seedDB() {
 
         // Insert new courses
         await Course.insertMany(courses);
-        console.log("Professional courses seeded successfully! 🚀");
+        console.log("Professional courses with videos seeded successfully! 🚀");
 
         process.exit();
     } catch (err) {
