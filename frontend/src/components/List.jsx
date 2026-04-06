@@ -27,6 +27,7 @@ import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 
 import "./courseStyle.css";
+import StarRating, { AverageStars } from "./RatingStars";
 
 const fallbackImages = [
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
@@ -50,10 +51,32 @@ function Courses() {
 
     const [loading, setLoading] = useState(false);
     const [isPurchased, setIsPurchased] = useState(false);
+    const [ratingData, setRatingData] = useState({ average: null, totalRatings: 0 });
+    const [myRating, setMyRating] = useState(0);
 
     useEffect(() => {
         fetchCourseDetails();
+        fetchRatings();
+        checkPurchased();
     }, [id]);
+
+    const fetchRatings = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/rating/${id}`);
+            if (res.data.success) setRatingData(res.data);
+        } catch {}
+    };
+
+    const checkPurchased = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+            const res = await axios.get(`${API_BASE_URL}/rating/${id}/my`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.data.myRating) setMyRating(res.data.myRating.rating);
+        } catch {}
+    };
 
     const fetchCourseDetails = async () => {
         try {
@@ -93,22 +116,59 @@ function Courses() {
         try {
             setLoading(true);
 
-            const res = await axios.post(
-                `${API_BASE_URL}/user/purchase`,
+            // Step 1: Create Razorpay order
+            const orderRes = await axios.post(
+                `${API_BASE_URL}/payment/create-order`,
                 { courseId: id },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            if (res.data.success) {
-                toast.success("Course Purchased Successfully");
-                setIsPurchased(true);
+            const orderData = orderRes.data;
+
+            if (!orderData.success) {
+                toast.error(orderData.message || "Failed to initiate payment");
+                setLoading(false);
+                return;
             }
+
+            // Step 2: Open Razorpay popup
+            const options = {
+                key: orderData.keyId,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "CourseHub",
+                description: orderData.courseName,
+                order_id: orderData.orderId,
+                handler: async function (response) {
+                    // Step 3: Verify payment
+                    const verifyRes = await axios.post(
+                        `${API_BASE_URL}/payment/verify`,
+                        {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            courseId: id,
+                        },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+
+                    if (verifyRes.data.success) {
+                        toast.success("🎉 Course Purchased Successfully!");
+                        setIsPurchased(true);
+                    } else {
+                        toast.error("Payment verification failed.");
+                    }
+                },
+                theme: { color: "#601b99" },
+                modal: {
+                    ondismiss: () => setLoading(false),
+                },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
         } catch (err) {
-            toast.error("Purchase failed");
+            toast.error("Payment failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -146,13 +206,14 @@ function Courses() {
                         <h1 className="text-4xl md:text-5xl font-extrabold premium-heading leading-tight">
                             {course?.title || state?.title}
                         </h1>
+                        <AverageStars average={ratingData.average} total={ratingData.totalRatings} />
                         <p className="text-gray-300 text-lg leading-relaxed">
                             {course?.description || state?.description}
                         </p>
                     </div>
 
                     {localStorage.getItem("role") !== "admin" && (
-                        <div className="pt-6">
+                        <div className="pt-6 space-y-6">
                             {!isPurchased ? (
                                 <button
                                     className="btn-premium w-full md:w-auto px-12 py-4 text-xl shadow-[0_0_30px_rgba(96,27,153,0.4)]"
@@ -161,13 +222,26 @@ function Courses() {
                                     Enroll Now for ${course?.price || state?.price}
                                 </button>
                             ) : (
-                                <div className="flex gap-4">
-                                    <button className="px-8 py-4 rounded-xl bg-green-500/10 text-green-400 border border-green-500/20 font-bold">
-                                        ✓ Enrolled
-                                    </button>
-                                    <button className="btn-premium px-8 py-4">
-                                        Start Learning
-                                    </button>
+                                <div className="space-y-6">
+                                    <div className="flex gap-4">
+                                        <button className="px-8 py-4 rounded-xl bg-green-500/10 text-green-400 border border-green-500/20 font-bold">
+                                            ✓ Enrolled
+                                        </button>
+                                        <button
+                                            className="btn-premium px-8 py-4"
+                                            onClick={() => navigate(`/course/${id}/watch`)}
+                                        >
+                                            ▶ Start Learning
+                                        </button>
+                                    </div>
+                                    {/* Rating section for enrolled users */}
+                                    <div className="glass-panel rounded-2xl p-6">
+                                        <StarRating
+                                            courseId={id}
+                                            isPurchased={isPurchased}
+                                            initialRating={myRating}
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>

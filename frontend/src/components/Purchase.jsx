@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { motion } from "framer-motion";
 
@@ -15,9 +15,16 @@ const courseImages = [
 const Purchase = () => {
     const [purchases, setPurchases] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPurchases = async () => {
+            const role = localStorage.getItem("role");
+            if (role === "admin") {
+                navigate("/");
+                return;
+            }
+
             try {
                 const token = localStorage.getItem("token");
                 const res = await axios.get(
@@ -36,7 +43,7 @@ const Purchase = () => {
             }
         };
         fetchPurchases();
-    }, []);
+    }, [navigate]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -111,8 +118,11 @@ const Purchase = () => {
                                 </p>
 
                                 <div className="flex justify-center mt-auto pt-4 border-t border-white/10">
-                                    <button className="btn-premium w-full text-center py-3">
-                                        View Content
+                                    <button
+                                        className="btn-premium w-full text-center py-3"
+                                        onClick={() => navigate(`/course/${course._id}/watch`)}
+                                    >
+                                        ▶ Start Learning
                                     </button>
                                 </div>
                             </div>

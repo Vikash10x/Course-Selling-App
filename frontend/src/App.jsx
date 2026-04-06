@@ -10,7 +10,8 @@ import AddCourse from './components/AddCourse';
 import List from './components/List';
 import Footer from './components/Footer';
 import LandingPage from './components/LandingPage';
-// import bg from '../public/Images/bg.svg';
+import Profile from './components/Profile';
+import CoursePlayer from './components/CoursePlayer';
 
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
         {/* <Route path="/AddCourse" element={<AddCourse />} /> */}
         <Route path="/purchase" element={<Purchase />} />
         <Route path="/course/:id" element={<List />} />
+        <Route path="/course/:id/watch" element={<CoursePlayer />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
 
       {/* <Footer /> */}

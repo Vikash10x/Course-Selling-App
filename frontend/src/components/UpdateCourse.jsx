@@ -10,6 +10,7 @@ const UpdateCourse = ({ course, setCourses }) => {
         description: course.description,
         price: course.price,
         imageLink: course.imageLink || "",
+        videoUrl: course.videoUrl || "",
     });
 
     const handleSubmit = async (e) => {
@@ -111,6 +112,16 @@ const UpdateCourse = ({ course, setCourses }) => {
                                     setUpdatedCourse({ ...updatedCourse, imageLink: e.target.value })
                                 }
                                 placeholder="Image Link"
+                                className="border border-gray-300 p-2 rounded-xl w-full mb-3 text-black bg-white shadow-sm"
+                            />
+
+                            <input
+                                type="text"
+                                value={updatedCourse.videoUrl}
+                                onChange={(e) =>
+                                    setUpdatedCourse({ ...updatedCourse, videoUrl: e.target.value })
+                                }
+                                placeholder="YouTube Video URL (optional)"
                                 className="border border-gray-300 p-2 rounded-xl w-full mb-5 text-black bg-white shadow-sm"
                             />
 

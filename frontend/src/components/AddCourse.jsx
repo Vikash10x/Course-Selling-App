@@ -13,6 +13,7 @@ const AddCourse = () => {
         description: "",
         price: "",
         imageLink: "",
+        videoUrl: "",
     });
 
     const handleSubmit = async (e) => {
@@ -34,7 +35,7 @@ const AddCourse = () => {
 
             if (res.ok) {
                 alert("Course added successfully!");
-                setNewCourse({ title: "", description: "", price: "", imageLink: "" });
+                setNewCourse({ title: "", description: "", price: "", imageLink: "", videoUrl: "" });
                 setOpen(false);
             } else {
                 alert(data.message || "Failed to add course");
@@ -118,9 +119,18 @@ const AddCourse = () => {
                                 onChange={(e) =>
                                     setNewCourse({ ...newCourse, imageLink: e.target.value })
                                 }
-                                placeholder="Image Link"
+                                placeholder="Image Link (optional)"
                                 className="border p-2 rounded w-full mb-3 text-black"
-                                required
+                            />
+
+                            <input
+                                type="text"
+                                value={newCourse.videoUrl}
+                                onChange={(e) =>
+                                    setNewCourse({ ...newCourse, videoUrl: e.target.value })
+                                }
+                                placeholder="YouTube Video URL (optional)"
+                                className="border p-2 rounded w-full mb-3 text-black"
                             />
 
                             <div className="flex justify-end gap-3 mt-3">

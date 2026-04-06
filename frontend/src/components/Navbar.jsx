@@ -46,12 +46,14 @@ export default function Appbar() {
 
                         <AddCourse />
 
-                        <button
-                            className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors cursor-pointer"
-                            onClick={() => navigate("/purchase")}
-                        >
-                            My Courses
-                        </button>
+                        {localStorage.getItem("role") === "user" && (
+                            <button
+                                className="px-5 py-2 rounded-xl text-white font-medium hover:bg-white/10 transition-colors cursor-pointer"
+                                onClick={() => navigate("/purchase")}
+                            >
+                                My Courses
+                            </button>
+                        )}
 
                         <button
                             className="px-5 py-2 rounded-xl bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors border border-red-500/20 cursor-pointer"
@@ -69,8 +71,8 @@ export default function Appbar() {
                             Logout
                         </button>
 
-                        <Tooltip title={userEmail}>
-                            <IconButton className="ml-2">
+                        <Tooltip title="View Profile">
+                            <IconButton className="ml-2" onClick={() => navigate("/profile")}>
                                 <Avatar
                                     sx={{
                                         background: "linear-gradient(135deg, #601b99 0%, #3f1066 100%)",
@@ -78,7 +80,8 @@ export default function Appbar() {
                                         width: 38,
                                         height: 38,
                                         fontWeight: "bold",
-                                        boxShadow: "0 4px 10px rgba(96,27,153,0.3)"
+                                        boxShadow: "0 4px 10px rgba(96,27,153,0.3)",
+                                        cursor: "pointer",
                                     }}
                                 >
                                     {userEmail?.[0]?.toUpperCase()}
