@@ -5,9 +5,17 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://vikash:jACg61fzS9JItII4@cluster0.ib0fdeq.mongodb.net/course-app";
 
+console.log("Connecting to MongoDB...");
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Connection Error:", err));
+  .then(() => {
+    const dbName = mongoose.connection.name;
+    const host = mongoose.connection.host;
+    console.log(`✅ MongoDB Connected to database: ${dbName} at ${host}`);
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err.message);
+    process.exit(1); // Exit if DB connection fails in production
+  });
 
 
 

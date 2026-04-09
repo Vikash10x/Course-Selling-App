@@ -40,34 +40,42 @@ userRouter.post("/signup", async function (req, res) {
 })
 
 userRouter.post("/signin", async function (req, res) {
+    try {
+        const { email, password } = req.body;
+        console.log("Signin attempt for:", email);
 
-    const { email, password } = req.body;
-    console.log(email, password);
+        const user = await userModel.findOne({
+            email: email,
+        });
 
-    const user = await userModel.findOne({
-        email: email,
-    })
-    if (user && user.password === password) {
-        const token = jwt.sign({
-            id: user._id, role: user.role
-        }, JWT_SECRET, { expiresIn: "2h" });
+        if (user && user.password === password) {
+            const token = jwt.sign({
+                id: user._id,
+                role: user.role
+            }, JWT_SECRET, { expiresIn: "2h" });
 
-        console.log(token);
-        res.json({
-            message: "Signin successful",
-            token: token,
-            role: user.role
-        })
-    } else if (user && user.password !== password) {
-        res.status(403).json({
-            message: "Password is incorreect"
-        })
-    } else {
-        res.status(400).json({
-            message: "No account present from this email"
-        })
+            res.json({
+                message: "Signin successful",
+                token: token,
+                role: user.role
+            });
+        } else if (user && user.password !== password) {
+            res.status(403).json({
+                message: "Password is incorrect"
+            });
+        } else {
+            res.status(400).json({
+                message: "No account present from this email"
+            });
+        }
+    } catch (error) {
+        console.error("Signin Error:", error);
+        res.status(500).json({
+            message: "Internal server error during signin",
+            error: error.message
+        });
     }
-})
+});
 
 userRouter.post("/purchase", authMiddleware, async function (req, res) {
     const { courseId } = req.body;
