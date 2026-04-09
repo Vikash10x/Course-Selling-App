@@ -41,7 +41,10 @@ const Signin = () => {
                     setError(data.message);
                 }
             })
-            .catch(() => setError("Something went wrong"));
+            .catch((err) => {
+                console.error("Login Fetch Error:", err);
+                setError("Something went wrong");
+            });
     };
 
     return (
